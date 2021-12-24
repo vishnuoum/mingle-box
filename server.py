@@ -3,6 +3,7 @@ from flask_socketio import SocketIO
 import pymysql
 import json
 from datetime import datetime
+import hashlib
 
 
 app = Flask(__name__)
@@ -10,7 +11,8 @@ app.config['SECRET_KEY'] = 'vnkdjnfjknfl1232#'
 socketio = SocketIO(app)
 
 
-
+result = hashlib.sha256("hello@gmail.com".encode())
+adminHash=result.hexdigest()
 
 
 
@@ -221,12 +223,92 @@ def editCoderProfile():
     return "done"
 
 # ! edit buyer profile
-@app.route('/editCoderProfile', methods=['POST'])
-def editCoderProfile():
+@app.route('/editBuyerProfile', methods=['POST'])
+def editBuyerProfile():
     count=conn.execute("""Update buyers set username=%s,company=%s where sha2(mail,256)=%s""",[request.form.get("username"),request.form.get("company"),request.form.get("mail")])
     if(count==0):
         return "error"
     return "done"
+
+# ! add question 
+@app.route('/addQuestion', methods=['POST'])
+def addQuestion():
+    if(str(adminHash)!=request.form.get("mail")):
+        return "error"
+    options=[(obj["question"],json.dumps(obj["options"]),obj["answer"],obj["technology"]) for obj in json.loads(request.form.get("questions"))]
+    print(options)
+    count=conn.executemany("""Insert into questions(id,question,options,answer,technologyId) Values(NULL,%s,%s,%s,(Select id from technology where technology=%s))""",options)
+    myconn.commit()
+    if(count==0):
+        return "error"
+    return "done"
+
+# ! coder exam 
+@app.route('/coderExam', methods=['POST'])
+def coderExam():
+    conn.execute("""Select id, question, options from questions where technologyId=(Select id from technology where technology=%s) and exists(Select id from coders where sha2(mail,256)=%s)""",[request.form.get("technology"),request.form.get("mail")])
+    result=conn.fetchall()
+    if(len(result)==0):
+        return "error"
+    return json.dumps(result)
+
+# ! coder result 
+@app.route('/coderResult', methods=['POST'])
+def coderResult():
+    conn.execute("""Select id, answer, options from questions where technologyId=(Select id from technology where technology=%s) and exists(Select id from coders where sha2(mail,256)=%s)""",[request.form.get("technology"),request.form.get("mail")])
+    result=conn.fetchall()
+    if(len(result)==0):
+        return "error"
+    options=json.loads(request.form.get("options"))
+    score=0
+    for obj in result:
+        print(options[str(obj["id"])],(obj["answer"]))
+        if(options[str(obj["id"])]==(obj["answer"])):
+            score+=1
+    count=conn.execute("""Insert into score(id,score,technologyId,coderId) Values(NULL,%s,(Select id from technology where technology=%s),(Select id from coders where sha2(mail,256)=%s))""",[score,request.form.get("technology"),request.form.get("mail")])
+    myconn.commit()
+    if(count==0):
+        return "error"
+    if(score>=0.9*len(result)):
+        return json.dumps({"remarks":"pass","score":score})
+    
+    return json.dumps({"remarks":"fail","score":score})
+
+# ! buyer bid 
+@app.route('/buyerBid', methods=['POST'])
+def buyerBid():
+    count=conn.execute("""
+        Insert into bids(id,projectId,buyerId,datetime,amount) Values(NULL,%s,(Select id from buyers where sha2(mail,256)=%s),now(),%s)
+        On duplicate key Update amount=%s, datetime=now()""",
+            [request.form.get("projectId"),request.form.get("mail"),request.form.get("amount"),request.form.get("amount")])
+    myconn.commit()
+    if(count==0):
+        return "error"
+    else:
+        return "done"
+
+# ! list of projects for coders
+@app.route('/coderProjectList', methods=['POST'])
+def coderProjectList():
+    conn.execute("""Select id,name,description,technology,timestamp,finalCost,cost,(Select name from buyers where id=buyerId) as buyer from projects where coderId=(Select id from coders where sha2(mail,256)=%s)""",
+            [request.form.get("mail")])
+    result=conn.fetchall()
+    if(len(result)==0):
+        return "error"
+    else:
+        return json.dumps(result,default=str)
+
+# ! list of projects for buyers
+@app.route('/projectList', methods=['POST'])
+def projectList():
+    conn.execute("""Select id,name,description,technology,timestamp,cost,coalesce((Select max(amount) from bids where projectId=id),0) as highestBid from projects where buyerId is NULL""",
+            )
+    result=conn.fetchall()
+    if(len(result)==0):
+        return "error"
+    else:
+        return json.dumps(result,default=str)
+
 
 
 def messageReceived(methods=['GET', 'POST']):

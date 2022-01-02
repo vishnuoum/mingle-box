@@ -265,7 +265,7 @@ def buyerRequestHistory():
     print(result)
     return json.dumps(result)
 
-# ! buyer payment history
+# ! buyer payment history list
 @app.route('/buyerPaymentHistory', methods=['POST'])
 def buyerPaymentHistory():
     conn.execute("""Select id,amount,(Select username from coders where id=receiverId) as coder,datetime,description from payments where senderId=(Select id from buyers where SHA2(mail,256)=%s)""",[request.form.get("id")])

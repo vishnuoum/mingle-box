@@ -213,7 +213,7 @@ def buyerDashboard():
     conn.execute("""Select
                         (Select count(id) from projects where buyerId=(Select id from buyers where sha2(mail,256)=%s)) as bids,
                         (Select count(id) from requests where buyerId=(Select id from buyers where sha2(mail,256)=%s)) as requests,
-                        coalesce((Select sum(finalCost) from projects where buyerId=(Select id from buyers where sha2(mail,256)=%s)),0) as spent""",
+                        coalesce((Select sum(amount) from payments where senderId=(Select id from buyers where sha2(mail,256)=%s)),0) as spent""",
         [request.form.get("id"),request.form.get("id"),request.form.get("id")]
     )
     result=conn.fetchall()
@@ -256,6 +256,30 @@ def editBuyerProfile():
     if(count==0):
         return "error"
     return "done"
+
+# ! buyer request history
+@app.route('/buyerRequestHistory', methods=['POST'])
+def buyerRequestHistory():
+    conn.execute("""Select t1.id,t1.name,t1.technology,COALESCE(t2.count,0) as responses from requests t1 left JOIN (Select count(*) as count,requestId from responses group by requestId) t2 on t1.id=t2.requestId where buyerId=(Select id from buyers where SHA2(mail,256)=%s);""",[request.form.get("id")])
+    result=conn.fetchall()
+    print(result)
+    return json.dumps(result)
+
+# ! buyer payment history
+@app.route('/buyerPaymentHistory', methods=['POST'])
+def buyerPaymentHistory():
+    conn.execute("""Select id,amount,(Select username from coders where id=receiverId) as coder,datetime,description from payments where senderId=(Select id from buyers where SHA2(mail,256)=%s)""",[request.form.get("id")])
+    result=conn.fetchall()
+    print(result)
+    return json.dumps(result,default=str)
+
+# ! buyer chat history list
+@app.route('/buyerChatHistory', methods=['POST'])
+def buyerChatHistory():
+    conn.execute("""Select id""",[request.form.get("id")])
+    result=conn.fetchall()
+    print(result)
+    return json.dumps(result,default=str)
 
 # ! add question 
 @app.route('/addQuestion', methods=['POST'])

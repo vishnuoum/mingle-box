@@ -273,7 +273,7 @@ def buyerPaymentHistory():
     print(result)
     return json.dumps(result,default=str)
 
-# ! buyer chat history list
+# ! buyer chat history lists
 @app.route('/buyerChatHistory', methods=['POST'])
 def buyerChatHistory():
     conn.execute("""Select id""",[request.form.get("id")])

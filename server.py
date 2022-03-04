@@ -131,9 +131,9 @@ def addCoderTechnology():
 # ! add coder projects
 @app.route("/addCoderProject", methods=['POST'])
 def addCoderProject():
-
+    print("add project")
     # check if technolgies are valid and added to coders
-    conn.execute("""Select technology from coders where sha2(mail,256)=%s""",[request.form.get("mail")])
+    conn.execute("""Select technology from coders where sha2(mail,256)=%s""",[request.form.get("id")])
     result=conn.fetchall()
 
     if(result[0]["technology"]==None):
@@ -192,20 +192,29 @@ def addBuyerRequest():
         return "error"
     return "done"
 
+# ! buyers request list
+@app.route('/listBuyersRequests', methods=['POST'])
+def listBuyersRequests():
+    conn.execute("""SELECT r.id,r.name,r.description,r.technology,b.username,sha2(r.buyerId,256) as buyerId FROM requests r inner join buyers b on r.buyerId=b.id where TIMESTAMPDIFF(MINUTE,r.adddatetime,now())/60>24;""")
+    result=conn.fetchall()
+    print(result)
+    return json.dumps(result)
+
+
 
 # ! coder dashboard
 @app.route('/coderDashboard', methods=['POST'])
 def coderDashboard():
-    conn.execute("""Select
+    conn.execute("""Select username,mail, 
                         (Select count(id) from projects where coderId=(Select id from coders where sha2(mail,256)=%s) and buyerId is not NULL) as completedProjects,
                         (Select count(distinct buyerId) from projects where coderId=(Select id from coders where sha2(mail,256)=%s) and buyerId is not NULL) as uniqueBuyers,
-                        coalesce((Select sum(finalCost) from projects where coderId=(Select id from coders where sha2(mail,256)=%s) and buyerId is not NULL),0) as earned,
+                        coalesce((Select sum(finalCost) from projects where coderId=(Select id from coders where sha2(mail,256)=%s) and buyerId is not NULL),0) as earned
                     from coders where sha2(mail,256)=%s""",
         [request.form.get("id"),request.form.get("id"),request.form.get("id"),request.form.get("id")]
     )
     result=conn.fetchall()
     print(result)
-    return json.dumps(result,default=str)
+    return json.dumps(result)
 
 # ! buyer dashboard
 @app.route('/buyerDashboard', methods=['POST'])
@@ -232,8 +241,9 @@ def buyerProfile():
 # ! coder profile
 @app.route('/coderProfile', methods=['POST'])
 def coderProfile():
-    conn.execute("""Select SHA2(id,256) as id,username,mail from coders where SHA2(mail,256)=%s""",[request.form.get("id")])
+    conn.execute("""Select SHA2(id,256) as id,username,mail,technology from coders where SHA2(mail,256)=%s""",[request.form.get("id")])
     result=conn.fetchall()
+    print(result)
     if(len(result)==0):
         return "error"
     return json.dumps(result[0])
@@ -243,6 +253,7 @@ def coderProfile():
 def editCoderProfile():
     count=conn.execute("""Update coders set username=%s where sha2(mail,256)=%s""",[request.form.get("username"),request.form.get("id")])
     myconn.commit()
+    print(conn._last_executed)
     if(count==0):
         return "error"
     return "done"
@@ -273,10 +284,18 @@ def buyerPaymentHistory():
     print(result)
     return json.dumps(result,default=str)
 
-# ! buyer chat history lists
-@app.route('/buyerChatHistory', methods=['POST'])
+# ! coder payment history list
+@app.route('/coderPaymentHistory', methods=['POST'])
+def coderPaymentHistory():
+    conn.execute("""Select p.id as id,p.amount as amount,p.description as description,p.datetime as datetime,b.username as sender from payments p inner join buyers b on p.senderId=b.id where p.receiverId = (Select id from coders where sha2(mail,256)=%s)""",[request.form.get("id")])
+    result=conn.fetchall()
+    print(result)
+    return json.dumps(result,default=str)
+
+# ! coder chat lists
+@app.route('/coderChatList', methods=['POST'])
 def buyerChatHistory():
-    conn.execute("""Select id""",[request.form.get("id")])
+    conn.execute("""Select id,(Select concat(COALESCE((Select "You: " from chat where id=T.id and senderType="coder"),''),message) from chat c where id= T.id) as message,(Select datetime from chat c where id= T.id) as datetime,chatWith,chatWithId from (Select max(id) as id,if(strcmp(senderType,"coder")=0,(Select username from buyers where id= receiver),(Select username from buyers where id= sender)) as chatWith,if(strcmp(senderType,"coder")=0,receiver,sender) as chatWithId from chat where (sender=(Select id from coders where sha2(mail,256)=%s) and senderType="coder") or (receiver=(Select id from coders where sha2(mail,256)=%s) and receiverType="coder")) T group by chatWithId;""",[request.form.get("id"),request.form.get("id")])
     result=conn.fetchall()
     print(result)
     return json.dumps(result,default=str)
@@ -341,13 +360,20 @@ def buyerBid():
 # ! list of projects for coders
 @app.route('/coderProjectList', methods=['POST'])
 def coderProjectList():
-    conn.execute("""Select id,name,technology,timestamp,finalCost,cost,(Select name from buyers where id=buyerId) as buyer from projects where coderId=(Select id from coders where sha2(mail,256)=%s)""",
+    conn.execute("""Select sha2(id,256) as id,name,description,technology,timestamp,finalCost,cost,(Select name from buyers where id=buyerId) as buyer,COALESCE((Select max(amount) from bids b where b.projectId=projects.id),0) as largestBid from projects where coderId=(Select id from coders where sha2(mail,256)=%s)""",
             [request.form.get("id")])
     result=conn.fetchall()
-    if(len(result)==0):
-        return "error"
-    else:
-        return json.dumps(result,default=str)
+    return json.dumps(result,default=str)
+
+# ! list of project bidders for coders
+@app.route('/coderProjectBidders', methods=['POST'])
+def coderProjectBidders():
+    print("bidder")
+    conn.execute("""select datetime,amount,(Select username from buyers where id=buyerId) as bidder from bids where sha2(projectId,256)=%s""",
+            [request.form.get("id")])
+    result=conn.fetchall()
+    print(result)
+    return json.dumps(result,default=str)
 
 
 # ! list of coders

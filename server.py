@@ -128,6 +128,14 @@ def addCoderTechnology():
     else:
         return "done"
 
+# ! get coder technology list
+@app.route('/getCoderTechnologyList', methods=['POST'])
+def getCoderTechnologyList():
+    conn.execute("""Select sha2(id,256) as id, technology from technology""")
+    result=conn.fetchall()
+    print(result)
+    return json.dumps(result)
+
 # ! add coder projects
 @app.route("/addCoderProject", methods=['POST'])
 def addCoderProject():
@@ -316,10 +324,9 @@ def addQuestion():
 # ! coder exam 
 @app.route('/coderExam', methods=['POST'])
 def coderExam():
-    conn.execute("""Select id, question, options from questions where technologyId=(Select id from technology where technology=%s) and exists(Select id from coders where sha2(mail,256)=%s)""",[request.form.get("technology"),request.form.get("id")])
+    conn.execute("""Select sha2(id,256) as id, question, optionList from questions q inner join (Select questionId,concat('[',GROUP_CONCAT(concat('"',optionText,'"')),']') as optionList from options group by questionId) o on q.id=o.questionId where sha2(technologyId,256)=%s;""",[request.form.get("technologyId")])
     result=conn.fetchall()
-    if(len(result)==0):
-        return "error"
+    print(result)
     return json.dumps(result)
 
 # ! coder result 

@@ -3,7 +3,7 @@
 -- https://www.phpmyadmin.net/
 --
 -- Host: localhost
--- Generation Time: Mar 04, 2022 at 06:03 PM
+-- Generation Time: Mar 05, 2022 at 07:12 PM
 -- Server version: 10.4.21-MariaDB
 -- PHP Version: 8.0.10
 
@@ -118,6 +118,34 @@ INSERT INTO `coders` (`id`, `username`, `mail`, `password`, `technology`, `date`
 -- --------------------------------------------------------
 
 --
+-- Table structure for table `options`
+--
+
+CREATE TABLE `options` (
+  `id` int(255) NOT NULL,
+  `optionText` text NOT NULL,
+  `questionId` int(255) NOT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
+
+--
+-- Dumping data for table `options`
+--
+
+INSERT INTO `options` (`id`, `optionText`, `questionId`) VALUES
+(1, 'List is a set', 2),
+(2, 'List is a collection of data', 2),
+(3, 'List is a set', 3),
+(4, 'List is a collection of data', 3),
+(5, 'List is a set', 4),
+(6, 'List is a collection of data', 4),
+(7, 'List is a set', 5),
+(8, 'List is a collection of data', 5),
+(9, 'List is a set', 6),
+(10, 'List is a collection of data', 6);
+
+-- --------------------------------------------------------
+
+--
 -- Table structure for table `payments`
 --
 
@@ -172,7 +200,6 @@ INSERT INTO `projects` (`id`, `name`, `description`, `technology`, `timestamp`, 
 CREATE TABLE `questions` (
   `id` int(255) NOT NULL,
   `question` text NOT NULL,
-  `options` longtext CHARACTER SET utf8mb4 COLLATE utf8mb4_bin NOT NULL CHECK (json_valid(`options`)),
   `answer` varchar(50) NOT NULL,
   `technologyId` int(255) NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
@@ -181,12 +208,12 @@ CREATE TABLE `questions` (
 -- Dumping data for table `questions`
 --
 
-INSERT INTO `questions` (`id`, `question`, `options`, `answer`, `technologyId`) VALUES
-(2, 'What is list?', '[\"List is a set\", \"List is a collection of data\"]', '2', 1),
-(3, 'What is list?', '[\"List is a set\", \"List is a collection of data\"]', '2', 1),
-(4, 'What is list?', '[\"List is a set\", \"List is a collection of data\"]', '2', 1),
-(5, 'What is list?', '[\"List is a set\", \"List is a collection of data\"]', '2', 1),
-(6, 'What is list?', '[\"List is a set\", \"List is a collection of data\"]', '2', 1);
+INSERT INTO `questions` (`id`, `question`, `answer`, `technologyId`) VALUES
+(2, 'What is list?', '2', 1),
+(3, 'What is list?', '4', 1),
+(4, 'What is list?', '6', 1),
+(5, 'What is list?', '8', 1),
+(6, 'What is list?', '10', 1);
 
 -- --------------------------------------------------------
 
@@ -304,6 +331,12 @@ ALTER TABLE `coders`
   ADD UNIQUE KEY `mail` (`mail`);
 
 --
+-- Indexes for table `options`
+--
+ALTER TABLE `options`
+  ADD PRIMARY KEY (`id`);
+
+--
 -- Indexes for table `payments`
 --
 ALTER TABLE `payments`
@@ -372,6 +405,12 @@ ALTER TABLE `chat`
 --
 ALTER TABLE `coders`
   MODIFY `id` int(255) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=9;
+
+--
+-- AUTO_INCREMENT for table `options`
+--
+ALTER TABLE `options`
+  MODIFY `id` int(255) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=11;
 
 --
 -- AUTO_INCREMENT for table `payments`

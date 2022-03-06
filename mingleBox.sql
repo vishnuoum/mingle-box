@@ -3,7 +3,7 @@
 -- https://www.phpmyadmin.net/
 --
 -- Host: localhost
--- Generation Time: Mar 05, 2022 at 07:12 PM
+-- Generation Time: Mar 06, 2022 at 11:39 AM
 -- Server version: 10.4.21-MariaDB
 -- PHP Version: 8.0.10
 
@@ -40,7 +40,8 @@ CREATE TABLE `bids` (
 --
 
 INSERT INTO `bids` (`id`, `projectId`, `buyerId`, `datetime`, `amount`) VALUES
-(1, 1, 1, '2021-12-24 05:41:28', '25000');
+(1, 1, 1, '2022-03-06 10:35:19', '28000'),
+(3, 2, 1, '2022-03-06 09:51:37', '30000');
 
 -- --------------------------------------------------------
 
@@ -64,7 +65,7 @@ CREATE TABLE `buyers` (
 --
 
 INSERT INTO `buyers` (`id`, `username`, `company`, `mail`, `password`, `date`, `verified`, `pushId`) VALUES
-(1, 'hello1', 'hello', 'hello1@gmail.com', 'a665a45920422f9d417e4867efdc4fb8a04a1f3fff1fa07e998e86f7f7a27ae3', '2021-12-23', 'yes', NULL),
+(1, 'hello3', 'hello', 'hello1@gmail.com', 'a665a45920422f9d417e4867efdc4fb8a04a1f3fff1fa07e998e86f7f7a27ae3', '2021-12-23', 'yes', NULL),
 (8, 'Vishnu', 'UEC', 'hallellujah@gmail.com', 'a665a45920422f9d417e4867efdc4fb8a04a1f3fff1fa07e998e86f7f7a27ae3', '2021-12-29', 'no', NULL);
 
 -- --------------------------------------------------------
@@ -163,7 +164,9 @@ CREATE TABLE `payments` (
 --
 
 INSERT INTO `payments` (`id`, `amount`, `senderId`, `receiverId`, `datetime`, `description`) VALUES
-(1, '2500', 1, 2, '2021-12-30 16:43:14', 'Mingle Box payment');
+(1, '2500', 1, 2, '2021-12-30 16:43:14', 'Mingle Box payment'),
+(2, '2500', 1, 2, '2022-03-06 07:11:04', 'Mingle Box 2'),
+(3, '25000', 1, 2, '2022-03-06 07:12:52', 'Mingle Box 3');
 
 -- --------------------------------------------------------
 
@@ -236,7 +239,9 @@ CREATE TABLE `requests` (
 
 INSERT INTO `requests` (`id`, `name`, `description`, `technology`, `adddatetime`, `buyerId`) VALUES
 (2, 'Mingle Box', 'hello', '[\"flask\"]', '2021-12-23 13:12:58', 1),
-(3, 'TTS engine', 'hello', '[\"python\"]', '2021-12-30 13:54:37', 1);
+(3, 'TTS engine', 'hello', '[\"python\"]', '2021-12-30 13:54:37', 1),
+(4, 'Needed Python Devs', 'Required python developers for project', '[\"python\"]', '2022-03-06 08:46:42', 1),
+(5, 'Needed Python Devs 2', 'Mingle Box', '[\"python\", \"flask\"]', '2022-03-06 08:49:14', 1);
 
 -- --------------------------------------------------------
 
@@ -276,7 +281,9 @@ CREATE TABLE `score` (
 --
 
 INSERT INTO `score` (`id`, `technologyId`, `score`, `coderId`) VALUES
-(2, 1, '5', 2);
+(2, 3, '75', 2),
+(3, 4, '80', 2),
+(5, 1, '100', 2);
 
 -- --------------------------------------------------------
 
@@ -386,7 +393,7 @@ ALTER TABLE `technology`
 -- AUTO_INCREMENT for table `bids`
 --
 ALTER TABLE `bids`
-  MODIFY `id` int(255) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=3;
+  MODIFY `id` int(255) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=6;
 
 --
 -- AUTO_INCREMENT for table `buyers`
@@ -416,7 +423,7 @@ ALTER TABLE `options`
 -- AUTO_INCREMENT for table `payments`
 --
 ALTER TABLE `payments`
-  MODIFY `id` int(255) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=2;
+  MODIFY `id` int(255) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=4;
 
 --
 -- AUTO_INCREMENT for table `projects`
@@ -434,7 +441,7 @@ ALTER TABLE `questions`
 -- AUTO_INCREMENT for table `requests`
 --
 ALTER TABLE `requests`
-  MODIFY `id` int(255) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=4;
+  MODIFY `id` int(255) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=6;
 
 --
 -- AUTO_INCREMENT for table `responses`
@@ -446,7 +453,7 @@ ALTER TABLE `responses`
 -- AUTO_INCREMENT for table `score`
 --
 ALTER TABLE `score`
-  MODIFY `id` int(255) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=3;
+  MODIFY `id` int(255) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=6;
 
 --
 -- AUTO_INCREMENT for table `technology`

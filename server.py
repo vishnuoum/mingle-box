@@ -316,15 +316,15 @@ def coderPaymentHistory():
 # ! coder chat lists
 @app.route('/coderChatList', methods=['POST'])
 def coderChatList():
-    conn.execute("""Select id,(Select concat(COALESCE((Select "You: " from chat where id=T.id and senderType="coder"),''),message) from chat c where id= T.id) as message,(Select datetime from chat c where id= T.id) as datetime,chatWith,chatWithId from (Select max(id) as id,if(strcmp(senderType,"coder")=0,(Select username from buyers where id= receiver),(Select username from buyers where id= sender)) as chatWith,if(strcmp(senderType,"coder")=0,receiver,sender) as chatWithId from chat where (sender=(Select id from coders where sha2(mail,256)=%s) and senderType="coder") or (receiver=(Select id from coders where sha2(mail,256)=%s) and receiverType="coder")) T group by chatWithId;""",[request.form.get("id"),request.form.get("id")])
+    conn.execute("""Select id,(Select concat(COALESCE((Select "You: " from chat where id=T.id and senderType="coder"),''),message) from chat c where id= T.id) as message,(Select datetime from chat c where id= T.id) as datetime,chatWith,chatWithId from (Select max(id) as id,if(strcmp(senderType,"coder")=0,(Select username from buyers where id= receiver),(Select username from buyers where id= sender)) as chatWith,if(strcmp(senderType,"coder")=0,(select sha2(mail,256) from buyers where id=receiver),(select sha2(mail,256) from buyers where id=sender)) as chatWithId from chat where (sender=(Select id from coders where sha2(mail,256)=%s) and senderType="coder") or (receiver=(Select id from coders where sha2(mail,256)=%s) and receiverType="coder")) T group by chatWithId;""",[request.form.get("id"),request.form.get("id")])
     result=conn.fetchall()
     print(result)
     return json.dumps(result,default=str)
 
-# ! coder chat lists
+# ! buyer chat lists
 @app.route('/buyerChatList', methods=['POST'])
 def buyerChatList():
-    conn.execute("""Select id,(Select concat(COALESCE((Select "You: " from chat where id=T.id and senderType="buyer"),''),message) from chat c where id= T.id) as message,(Select datetime from chat c where id= T.id) as datetime,chatWith,chatWithId from (Select max(id) as id,if(strcmp(senderType,"buyer")=0,(Select username from coders where id= receiver),(Select username from coders where id= sender)) as chatWith,if(strcmp(senderType,"buyer")=0,receiver,sender) as chatWithId from chat where (sender=(Select id from buyers where sha2(mail,256)=%s) and senderType="buyer") or (receiver=(Select id from buyers where sha2(mail,256)=%s) and receiverType="buyer")) T group by chatWithId;""",[request.form.get("id"),request.form.get("id")])
+    conn.execute("""Select id,(Select concat(COALESCE((Select "You: " from chat where id=T.id and senderType="buyer"),''),message) from chat c where id= T.id) as message,(Select datetime from chat c where id= T.id) as datetime,chatWith,chatWithId from (Select max(id) as id,if(strcmp(senderType,"buyer")=0,(Select username from coders where id= receiver),(Select username from coders where id= sender)) as chatWith,if(strcmp(senderType,"buyer")=0,(select sha2(mail,256) from coders where id=receiver),(select sha2(mail,256) from coders where id=sender)) as chatWithId from chat where (sender=(Select id from buyers where sha2(mail,256)=%s) and senderType="buyer") or (receiver=(Select id from buyers where sha2(mail,256)=%s) and receiverType="buyer")) T group by chatWithId;""",[request.form.get("id"),request.form.get("id")])
     result=conn.fetchall()
     print(result)
     return json.dumps(result,default=str)
@@ -467,15 +467,24 @@ def messageReceived(methods=['GET', 'POST']):
 
 @socketio.on('connect')
 def connect():
-    users[request.cookies.get('phone')]=request.sid
-    print(users)
     print("user connected : "+request.sid)
+
+@socketio.on('userId')
+def userId(data):
+    users[data["userId"]]=request.sid
+    print(users)
+    print("userId updated")
+
+
+@socketio.on('userDisconnection')
+def userDisconnection(data):
+    users.pop(data["userId"])
+    print("user disconnection")
 
 
 @socketio.on('disconnect')
-def connect():
-    users.pop(request.cookies.get('phone'))
-    print("user disconnected")
+def disconnect():
+    print("user disconnected: "+request.sid)
 
 
 @socketio.on('send_message')
@@ -492,15 +501,6 @@ def send(json, methods=['GET','POST']):
     print(json)
     socketio.emit('new_message',json,room=socketid)
 
-
-
-
-@socketio.on('user_connected')
-def handle_my_custom_event(json, methods=['GET', 'POST']):
-    print('user connected ' + str(json))
-    # users[str(json)]=request.sid
-    # print(users)
-    socketio.emit('user_connected', str(json), callback=messageReceived)
 
 @app.route('/all_users', methods=['POST'])
 def postJsonHandler():

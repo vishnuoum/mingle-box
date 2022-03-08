@@ -316,7 +316,7 @@ def coderPaymentHistory():
 # ! coder chat lists
 @app.route('/coderChatList', methods=['POST'])
 def coderChatList():
-    conn.execute("""Select id,(Select concat(COALESCE((Select "You: " from chat where id=T.id and senderType="coder"),''),message) from chat c where id= T.id) as message,(Select datetime from chat c where id= T.id) as datetime,chatWith,chatWithId from (Select max(id) as id,if(strcmp(senderType,"coder")=0,(Select username from buyers where id= receiver),(Select username from buyers where id= sender)) as chatWith,if(strcmp(senderType,"coder")=0,(select sha2(mail,256) from buyers where id=receiver),(select sha2(mail,256) from buyers where id=sender)) as chatWithId from chat where (sender=(Select id from coders where sha2(mail,256)=%s) and senderType="coder") or (receiver=(Select id from coders where sha2(mail,256)=%s) and receiverType="coder")) T group by chatWithId;""",[request.form.get("id"),request.form.get("id")])
+    conn.execute("""Select (Select concat(COALESCE((Select "You: " from chat where id=T.id and senderType="coder"),''),message) from chat c where id= T.id) as message,(Select datetime from chat c where id= T.id) as datetime,chatWith,chatWithId from (Select max(id) as id,if(strcmp(senderType,"coder")=0,(Select username from buyers where id= receiver),(Select username from buyers where id= sender)) as chatWith,if(strcmp(senderType,"coder")=0,(select sha2(mail,256) from buyers where id=receiver),(select sha2(mail,256) from buyers where id=sender)) as chatWithId from chat where (sender=(Select id from coders where sha2(mail,256)=%s) and senderType="coder") or (receiver=(Select id from coders where sha2(mail,256)=%s) and receiverType="coder")) T group by chatWithId;""",[request.form.get("id"),request.form.get("id")])
     result=conn.fetchall()
     print(result)
     return json.dumps(result,default=str)
@@ -324,7 +324,7 @@ def coderChatList():
 # ! buyer chat lists
 @app.route('/buyerChatList', methods=['POST'])
 def buyerChatList():
-    conn.execute("""Select id,(Select concat(COALESCE((Select "You: " from chat where id=T.id and senderType="buyer"),''),message) from chat c where id= T.id) as message,(Select datetime from chat c where id= T.id) as datetime,chatWith,chatWithId from (Select max(id) as id,if(strcmp(senderType,"buyer")=0,(Select username from coders where id= receiver),(Select username from coders where id= sender)) as chatWith,if(strcmp(senderType,"buyer")=0,(select sha2(mail,256) from coders where id=receiver),(select sha2(mail,256) from coders where id=sender)) as chatWithId from chat where (sender=(Select id from buyers where sha2(mail,256)=%s) and senderType="buyer") or (receiver=(Select id from buyers where sha2(mail,256)=%s) and receiverType="buyer")) T group by chatWithId;""",[request.form.get("id"),request.form.get("id")])
+    conn.execute("""Select (Select concat(COALESCE((Select "You: " from chat where id=T.id and senderType="buyer"),''),message) from chat c where id= T.id) as message,(Select datetime from chat c where id= T.id) as datetime,chatWith,chatWithId from (Select max(id) as id,if(strcmp(senderType,"buyer")=0,(Select username from coders where id= receiver),(Select username from coders where id= sender)) as chatWith,if(strcmp(senderType,"buyer")=0,(select sha2(mail,256) from coders where id=receiver),(select sha2(mail,256) from coders where id=sender)) as chatWithId from chat where (sender=(Select id from buyers where sha2(mail,256)=%s) and senderType="buyer") or (receiver=(Select id from buyers where sha2(mail,256)=%s) and receiverType="buyer")) T group by chatWithId;""",[request.form.get("id"),request.form.get("id")])
     result=conn.fetchall()
     print(result)
     return json.dumps(result,default=str)
@@ -487,19 +487,25 @@ def disconnect():
     print("user disconnected: "+request.sid)
 
 
-@socketio.on('send_message')
+@socketio.on('sendMessage')
 def send(json, methods=['GET','POST']):
     today = datetime.now()
+    print(today)
     if(json['receiver'] in users):
         socketid=users[json['receiver']]
     else:
         socketid=''
-    conn.execute("INSERT INTO chat (sname, sender, rname, receiver, message, date, time) VALUES ((SELECT name FROM user WHERE phone='"+json['sender']+"'), '" + json['sender'] + "', (SELECT name FROM user WHERE phone='"+json['receiver']+"'),'" + json['receiver'] + "', '" + json['message'] + "','"+today.strftime("%d/%m/%Y")+"', '"+today.strftime('%I:%M %p')+"')")
-    myconn.commit()
-    json['date']=today.strftime("%d/%m/%Y")
-    json['time']=today.strftime("%I:%M %p")
     print(json)
-    socketio.emit('new_message',json,room=socketid)
+    count=conn.execute("""INSERT INTO chat(id,message,sender,senderType,receiver,receiverType) values(null,%s,if(strcmp(%s,'coder')=0,(Select id from coders where sha2(mail,256)=%s),(Select id from buyers where sha2(mail,256)=%s)),%s,if(strcmp(%s,'coder')=0,(Select id from coders where sha2(mail,256)=%s),(Select id from buyers where sha2(mail,256)=%s)),%s)""",[json["message"],json["senderType"],json["sender"],json["sender"],json["senderType"],json["receiverType"],json["receiver"],json["receiver"],json["receiverType"]])
+    myconn.commit()
+    print(count)
+    json["dateTime"]=str(today)
+    conn.execute("""Select if(strcmp(%s,'coder')=0,(Select username from coders where sha2(mail,256)=%s),(Select username from buyers where sha2(mail,256)=%s)) as chatWith""",
+            [json["senderType"],json["sender"],json["sender"]])
+    result=conn.fetchone()
+    print(result)
+    json["chatWith"]=result["chatWith"]
+    socketio.emit('newMessage',json,room=socketid)
 
 
 @app.route('/all_users', methods=['POST'])

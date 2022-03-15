@@ -4,6 +4,8 @@ import pymysql
 import json
 from datetime import datetime
 import hashlib
+import util
+import requests
 
 
 app = Flask(__name__)
@@ -172,10 +174,10 @@ def addCoderProject():
 def addBuyerRequest():
 
     # check if buyer is valid
-    conn.execute("""Select verified from buyers where sha2(mail,256)=%s""",[request.form.get("id")])
-    result=conn.fetchall()
+    conn.execute("""Select verified,username from buyers where sha2(mail,256)=%s""",[request.form.get("id")])
+    resultV=conn.fetchall()
 
-    if(len(result)==0 or result[0]["verified"]=="no"):
+    if(len(resultV)==0 or resultV[0]["verified"]=="no"):
         return "error"
     
     # check if tehcnologies are valid
@@ -200,12 +202,27 @@ def addBuyerRequest():
     myconn.commit()
     if(count==0):
         return "error"
+    
+    ids=util.kNN(myconn,json.loads(request.form.get("technology")))
+    print(ids)
+
+    header = {"Content-Type": "application/json; charset=utf-8","Authorization": "Basic MmVkNjBmYzctMWM1Mi00NDQwLTgzYWQtODdkOTA4YTk3ZDAw"}
+
+    payload = {"app_id": "94000518-7da5-44a5-a338-7efd79d09099",
+            "include_external_user_ids": ids,
+            "channel_for_external_user_ids": "push",
+            "headings":{"en":"New Buyer Request"},
+            "contents": {"en": request.form.get("name")}}
+    
+    req = requests.post("https://onesignal.com/api/v1/notifications", headers=header, data=json.dumps(payload))
+    print(req.status_code, req.reason)
     return "done"
+
 
 # ! buyers request list
 @app.route('/listBuyersRequests', methods=['POST'])
 def listBuyersRequests():
-    conn.execute("""SELECT r.id,r.name,r.description,r.technology,b.username,sha2(r.buyerId,256) as buyerId FROM requests r inner join buyers b on r.buyerId=b.id where TIMESTAMPDIFF(MINUTE,r.adddatetime,now())/60>24;""")
+    conn.execute("""SELECT r.id,r.name,r.description,r.technology,b.username,sha2(b.mail,256) as buyerId FROM requests r inner join buyers b on r.buyerId=b.id where TIMESTAMPDIFF(MINUTE,r.adddatetime,now())/60>24;""")
     result=conn.fetchall()
     print(result)
     return json.dumps(result)
@@ -460,6 +477,16 @@ def buyerBidHistory():
     else:
         return json.dumps(result,default=str)
 
+# ! respond to buyer request
+@app.route('/coderRespond', methods=['POST'])
+def coderRespond():
+    count=conn.execute("""Insert into responses(id,coderId,requestId) values(null,(Select id from coders where sha2(mail,256)=%s),%s)""",[request.form.get("coderId"),request.form.get("requestId")])
+    myconn.commit()
+    print(conn._last_executed)
+    if(count==0):
+        return "error"
+    return "done"
+
 
 
 def messageReceived(methods=['GET', 'POST']):
@@ -495,10 +522,10 @@ def send(json, methods=['GET','POST']):
         socketid=users[json['receiver']]
     else:
         socketid=''
-    print(json)
+    print(json["receiver"])
     count=conn.execute("""INSERT INTO chat(id,message,sender,senderType,receiver,receiverType) values(null,%s,if(strcmp(%s,'coder')=0,(Select id from coders where sha2(mail,256)=%s),(Select id from buyers where sha2(mail,256)=%s)),%s,if(strcmp(%s,'coder')=0,(Select id from coders where sha2(mail,256)=%s),(Select id from buyers where sha2(mail,256)=%s)),%s)""",[json["message"],json["senderType"],json["sender"],json["sender"],json["senderType"],json["receiverType"],json["receiver"],json["receiver"],json["receiverType"]])
     myconn.commit()
-    print(count)
+    print(conn._last_executed)
     json["dateTime"]=str(today)
     conn.execute("""Select if(strcmp(%s,'coder')=0,(Select username from coders where sha2(mail,256)=%s),(Select username from buyers where sha2(mail,256)=%s)) as chatWith""",
             [json["senderType"],json["sender"],json["sender"]])

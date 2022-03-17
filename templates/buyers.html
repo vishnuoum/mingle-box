@@ -1,0 +1,142 @@
+<html>
+
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@4.6.1/dist/css/bootstrap.min.css">
+    <script src="https://cdn.jsdelivr.net/npm/jquery@3.6.0/dist/jquery.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/popper.js@1.16.1/dist/umd/popper.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@4.6.1/dist/js/bootstrap.bundle.min.js"></script>
+    <title>Buyers</title>
+    <style>
+        nav {
+            box-shadow: 0 4px 8px 0 rgba(0, 0, 0, 0.1), 0 6px 20px 0 rgba(0, 0, 0, 0.09);
+        }
+
+        .container {
+            margin-top: 20px;
+        }
+
+        .hidden {
+            display: none;
+        }
+
+        .spinner-border {
+            margin-top: 30%;
+        }
+    </style>
+</head>
+
+<body>
+    <nav class="navbar navbar-expand-lg navbar-light bg-light">
+        <a class="navbar-brand text-primary" href="#">Navbar</a>
+        <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarSupportedContent"
+            aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
+            <span class="navbar-toggler-icon"></span>
+        </button>
+
+        <div class="collapse navbar-collapse" id="navbarSupportedContent">
+            <ul class="navbar-nav mr-auto">
+                <li class="nav-item">
+                    <a class="nav-link" href="/admin">Home</a>
+                </li>
+                <li class="nav-item active">
+                    <a class="nav-link text-primary" href="#">Buyers</a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link" href="/adminCoders">Coders</a>
+                </li>
+            </ul>
+        </div>
+    </nav>
+    <div class="container">
+        <table class="table hidden" id="table">
+            <thead class="thead-dark">
+                <tr>
+                    <th scope="col">#</th>
+                    <th scope="col">Username</th>
+                    <th scope="col">Company</th>
+                    <th scope="col">Mail</th>
+                    <th scope="col">Join Date</th>
+                    <th scope="col">Verification Status</th>
+                </tr>
+            </thead>
+            <tbody>
+            </tbody>
+        </table>
+        <center>
+            <div class="spinner-border" role="status">
+                <span class="sr-only">Loading...</span>
+            </div>
+        </center>
+    </div>
+</body>
+
+</html>
+
+<script>
+    var result = [];
+    $(document).ready(function () {
+        $.ajax({
+            type: "POST",
+            url: "/adminBuyersList",
+            success: function (data) {
+                try {
+                    result = JSON.parse(data);
+                    console.log(result);
+                    load(result);
+                }
+                catch (e) {
+                    console.log(e);
+                    alert("Something went wrong.");
+                }
+            },
+            error: function (data) {
+                console.log(data);
+                alert("Something went wrong. Try again later.");
+            }
+        });
+    });
+
+    function load(result) {
+        for (var i = 0; i < result.length; i++) {
+            $('#table > tbody:last-child').append('<tr>\
+                <th scope = "row" >'+ (i + 1) + '</th>\
+                    <td>'+ result[i]["username"] + '</td> \
+                    <td>'+ result[i]["company"] + '</td> \
+                    <td>'+ result[i]["mail"] + '</td> \
+                    <td>'+ result[i]["date"] + '</td> \
+                    <td>'+ (result[i]["verified"] == 'no' ? '<button class="btn btn-primary" onclick="update(\'' + result[i]["id"] + '\')">Verify</button>' : 'Verified') + '</td> \
+                </tr >');
+        }
+        $("#table").toggleClass("hidden");
+        $(".spinner-border").toggleClass("hidden");
+    }
+
+    function update(id) {
+        console.log(id);
+        $.ajax({
+            type: "POST",
+            url: "/adminVerifyBuyer",
+            data: { "id": id },
+            success: function (data) {
+                try {
+                    if (data == "done") {
+                        location.reload();
+                    }
+                    else {
+                        alert("Something went wrong. Try again later.");
+                    }
+                }
+                catch (e) {
+                    console.log(e);
+                    alert("Something went wrong. Try again later.");
+                }
+            },
+            error: function (data) {
+                console.log(data);
+                alert("Something went wrong. Try again later.");
+            }
+        });
+    }
+</script>

@@ -3,7 +3,7 @@
 -- https://www.phpmyadmin.net/
 --
 -- Host: localhost
--- Generation Time: Mar 16, 2022 at 12:08 PM
+-- Generation Time: Mar 17, 2022 at 05:26 PM
 -- Server version: 10.4.21-MariaDB
 -- PHP Version: 8.0.10
 
@@ -41,7 +41,7 @@ CREATE TABLE `bids` (
 
 INSERT INTO `bids` (`id`, `projectId`, `buyerId`, `datetime`, `amount`) VALUES
 (1, 1, 1, '2022-03-06 10:35:19', '28000'),
-(3, 2, 1, '2022-03-06 09:51:37', '30000');
+(3, 2, 1, '2022-03-16 16:14:54', '300000');
 
 -- --------------------------------------------------------
 
@@ -66,7 +66,7 @@ CREATE TABLE `buyers` (
 
 INSERT INTO `buyers` (`id`, `username`, `company`, `mail`, `password`, `date`, `verified`, `pushId`) VALUES
 (1, 'hello3', 'hello', 'hello1@gmail.com', 'a665a45920422f9d417e4867efdc4fb8a04a1f3fff1fa07e998e86f7f7a27ae3', '2021-12-23', 'yes', NULL),
-(8, 'Vishnu', 'UEC', 'hallellujah@gmail.com', 'a665a45920422f9d417e4867efdc4fb8a04a1f3fff1fa07e998e86f7f7a27ae3', '2021-12-29', 'no', NULL);
+(8, 'Vishnu', 'UEC', 'hallellujah@gmail.com', 'a665a45920422f9d417e4867efdc4fb8a04a1f3fff1fa07e998e86f7f7a27ae3', '2021-12-29', 'yes', NULL);
 
 -- --------------------------------------------------------
 
@@ -196,7 +196,8 @@ INSERT INTO `chat` (`id`, `message`, `datetime`, `sender`, `senderType`, `receiv
 (106, 'chj', '2022-03-16 06:35:19', 1, 'buyer', 2, 'coder'),
 (107, 'hh', '2022-03-16 07:20:41', 1, 'buyer', 2, 'coder'),
 (108, 'j', '2022-03-16 07:20:48', 2, 'coder', 1, 'buyer'),
-(109, 'Hi', '2022-03-16 07:22:08', 1, 'buyer', 2, 'coder');
+(109, 'Hi', '2022-03-16 07:22:08', 1, 'buyer', 2, 'coder'),
+(110, 'hey', '2022-03-16 16:14:11', 2, 'coder', 1, 'buyer');
 
 -- --------------------------------------------------------
 
@@ -510,7 +511,7 @@ ALTER TABLE `technology`
 -- AUTO_INCREMENT for table `bids`
 --
 ALTER TABLE `bids`
-  MODIFY `id` int(255) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=6;
+  MODIFY `id` int(255) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=7;
 
 --
 -- AUTO_INCREMENT for table `buyers`
@@ -522,7 +523,7 @@ ALTER TABLE `buyers`
 -- AUTO_INCREMENT for table `chat`
 --
 ALTER TABLE `chat`
-  MODIFY `id` int(255) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=110;
+  MODIFY `id` int(255) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=111;
 
 --
 -- AUTO_INCREMENT for table `coders`

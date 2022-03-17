@@ -1,4 +1,4 @@
-from flask import Flask, render_template,request,jsonify
+from flask import Flask, render_template,request,jsonify,make_response,redirect
 from flask_socketio import SocketIO
 import pymysql
 import json
@@ -623,7 +623,69 @@ def get_messages():
         print(json.dumps(result))
     return json.dumps(result)
 
+@app.route('/admin', methods=['GET'])
+def admin():
+    if(request.cookies.get("acc")):
+        return render_template("index.html")
+    return redirect("/adminLogin")
 
+@app.route('/adminLogin', methods=['GET'])
+def adminLogin():
+    return render_template("login.html")
+
+@app.route('/adminValidate', methods=['POST'])
+def adminValidate():
+    if(request.form.get("mail")=="123@gmail.com" and request.form.get("password")=="123"):
+        response=make_response("done")
+        response.set_cookie("acc",hashlib.sha1(request.form.get('mail').encode()).hexdigest())
+        return response
+    else:
+        return "error"
+
+
+@app.route('/adminHome', methods=['POST'])
+def adminHome():
+    conn.execute("""SELECT company,(Select count(id) from bids where buyerId in (Select b.id from buyers b where b.company = bc.company)) as bids,(Select count(id) from projects where buyerId in (Select b.id from buyers b where b.company = bc.company)) as bought FROM `buyers` bc group by company;""")
+    result=conn.fetchall()
+    print(result)
+    return json.dumps(result,default=str)
+
+
+@app.route('/adminCoders', methods=['GET'])
+def adminCoders():
+    if(request.cookies.get("acc")):
+        return render_template("coders.html")
+    return redirect("/adminLogin")
+
+@app.route('/adminBuyers', methods=['GET'])
+def adminBuyers():
+    if(request.cookies.get("acc")):
+        return render_template("buyers.html")
+    return redirect("/adminLogin")
+
+@app.route('/adminCodersList', methods=['POST'])
+def adminCodersList():
+    if request.method=="POST":
+        conn.execute("""Select username, mail, date, technology, (Select count(id) from projects where coderId=coders.id and not finalCost is NULL) as completedProjects, (Select count(id) from projects where coderId=coders.id) as projects from coders""")
+        result=conn.fetchall()
+        print(result)
+    return json.dumps(result,default=str)
+
+@app.route('/adminBuyersList', methods=['POST'])
+def adminBuyersList():
+    if request.method=="POST":
+        conn.execute("""Select sha2(id,256) as id,username, mail, date, company, verified from buyers""")
+        result=conn.fetchall()
+        print(result)
+    return json.dumps(result,default=str)
+
+@app.route('/adminVerifyBuyer', methods=['POST'])
+def adminVerifyBuyer():
+    count=conn.execute("""Update buyers set verified='yes' where sha2(id,256)=%s""",[request.form.get("id")])
+    myconn.commit()
+    if(count==0):
+        return "error"
+    return "done"
 
 
 if __name__ == '__main__':

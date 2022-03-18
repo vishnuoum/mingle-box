@@ -333,7 +333,7 @@ def coderPaymentHistory():
 # ! coder chat lists
 @app.route('/coderChatList', methods=['POST'])
 def coderChatList():
-    conn.execute("""Select (Select concat(COALESCE((Select "You: " from chat where id=T.id and senderType="coder"),''),message) from chat c where id= T.id) as message,(Select datetime from chat c where id= T.id) as datetime,chatWith,chatWithId from (Select max(id) as id,if(strcmp(senderType,"coder")=0,(Select username from buyers where id= receiver),(Select username from buyers where id= sender)) as chatWith,if(strcmp(senderType,"coder")=0,(select sha2(mail,256) from buyers where id=receiver),(select sha2(mail,256) from buyers where id=sender)) as chatWithId from chat where (sender=(Select id from coders where sha2(mail,256)=%s) and senderType="coder") or (receiver=(Select id from coders where sha2(mail,256)=%s) and receiverType="coder")) T group by chatWithId;""",[request.form.get("id"),request.form.get("id")])
+    conn.execute("""Select id,(Select concat(COALESCE((Select "You: " from chat where id=T.id and senderType="coder"),''),message) from chat c where id= T.id) as message,(Select datetime from chat c where id= T.id) as datetime,chatWith,chatWithId from (Select max(id) as id,if(strcmp(senderType,"coder")=0,(Select username from buyers where id= receiver),(Select username from buyers where id= sender)) as chatWith,if(strcmp(senderType,"coder")=0,(select sha2(mail,256) from buyers where id=receiver),(select sha2(mail,256) from buyers where id=sender)) as chatWithId from chat where (sender=(Select id from coders where sha2(mail,256)=%s) and senderType="coder") or (receiver=(Select id from coders where sha2(mail,256)=%s) and receiverType="coder")) T group by chatWithId;""",[request.form.get("id"),request.form.get("id")])
     result=conn.fetchall()
     print(result)
     return json.dumps(result,default=str)
@@ -341,7 +341,7 @@ def coderChatList():
 # ! buyer chat lists
 @app.route('/buyerChatList', methods=['POST'])
 def buyerChatList():
-    conn.execute("""Select (Select concat(COALESCE((Select "You: " from chat where id=T.id and senderType="buyer"),''),message) from chat c where id= T.id) as message,(Select datetime from chat c where id= T.id) as datetime,chatWith,chatWithId from (Select max(id) as id,if(strcmp(senderType,"buyer")=0,(Select username from coders where id= receiver),(Select username from coders where id= sender)) as chatWith,if(strcmp(senderType,"buyer")=0,(select sha2(mail,256) from coders where id=receiver),(select sha2(mail,256) from coders where id=sender)) as chatWithId from chat where (sender=(Select id from buyers where sha2(mail,256)=%s) and senderType="buyer") or (receiver=(Select id from buyers where sha2(mail,256)=%s) and receiverType="buyer")) T group by chatWithId;""",[request.form.get("id"),request.form.get("id")])
+    conn.execute("""Select id,(Select concat(COALESCE((Select "You: " from chat where id=T.id and senderType="buyer"),''),message) from chat c where id= T.id) as message,(Select datetime from chat c where id= T.id) as datetime,chatWith,chatWithId from (Select max(id) as id,if(strcmp(senderType,"buyer")=0,(Select username from coders where id= receiver),(Select username from coders where id= sender)) as chatWith,if(strcmp(senderType,"buyer")=0,(select sha2(mail,256) from coders where id=receiver),(select sha2(mail,256) from coders where id=sender)) as chatWithId from chat where (sender=(Select id from buyers where sha2(mail,256)=%s) and senderType="buyer") or (receiver=(Select id from buyers where sha2(mail,256)=%s) and receiverType="buyer")) T group by chatWithId;""",[request.form.get("id"),request.form.get("id")])
     result=conn.fetchall()
     print(result)
     return json.dumps(result,default=str)
@@ -479,10 +479,7 @@ def buyerBidHistory():
             [request.form.get("id")])
     result=conn.fetchall()
     print(result)
-    if(len(result)==0):
-        return "error"
-    else:
-        return json.dumps(result,default=str)
+    return json.dumps(result,default=str)
 
 # ! respond to buyer request
 @app.route('/coderRespond', methods=['POST'])

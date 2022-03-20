@@ -7,7 +7,8 @@
     <script src="https://cdn.jsdelivr.net/npm/jquery@3.6.0/dist/jquery.min.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/popper.js@1.16.1/dist/umd/popper.min.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@4.6.1/dist/js/bootstrap.bundle.min.js"></script>
-    <title>Admin Home</title>
+    <script src="https://momentjs.com/downloads/moment.js"></script>
+    <title>Coders</title>
     <style>
         nav {
             box-shadow: 0 4px 8px 0 rgba(0, 0, 0, 0.1), 0 6px 20px 0 rgba(0, 0, 0, 0.09);
@@ -37,8 +38,8 @@
 
         <div class="collapse navbar-collapse" id="navbarSupportedContent">
             <ul class="navbar-nav mr-auto">
-                <li class="nav-item active">
-                    <a class="nav-link   text-primary" href="#">Home</a>
+                <li class="nav-item">
+                    <a class="nav-link" href="/admin">Home</a>
                 </li>
                 <li class="nav-item">
                     <a class="nav-link" href="/adminBuyers">Buyers</a>
@@ -46,8 +47,8 @@
                 <li class="nav-item">
                     <a class="nav-link" href="/adminCoders">Coders</a>
                 </li>
-                <li class="nav-item">
-                    <a class="nav-link" href="/adminPayments">Payments</a>
+                <li class="nav-item active">
+                    <a class="nav-link  text-primary" href="/adminPayments">Payments</a>
                 </li>
             </ul>
         </div>
@@ -57,9 +58,12 @@
             <thead class="thead-dark">
                 <tr>
                     <th scope="col">#</th>
-                    <th scope="col">Company</th>
-                    <th scope="col">No. of Bids</th>
-                    <th scope="col">Projects Acquired</th>
+                    <th scope="col">Amount</th>
+                    <th scope="col">From</th>
+                    <th scope="col">To</th>
+                    <th scope="col">Date</th>
+                    <th scope="col">Time</th>
+                    <th scope="col">Description</th>
                 </tr>
             </thead>
             <tbody></tbody>
@@ -79,7 +83,7 @@
     $(document).ready(function () {
         $.ajax({
             type: "POST",
-            url: "/adminHome",
+            url: "/adminPaymentsList",
             success: function (data) {
                 try {
                     result = JSON.parse(data);
@@ -100,11 +104,15 @@
 
     function load(result) {
         for (var i = 0; i < result.length; i++) {
+            console.log(result[i]["datetime"]);
             $('#table > tbody:last-child').append('<tr>\
                 <th scope = "row" >'+ (i + 1) + '</th>\
-                    <td>'+ result[i]["company"] + '</td> \
-                    <td>'+ result[i]["bids"] + '</td> \
-                    <td>'+ result[i]["bought"] + '</td> \
+                    <td>Rs. '+ result[i]["amount"] + '</td> \
+                    <td>'+ result[i]["from"] + '</td> \
+                    <td>'+ result[i]["to"] + '</td> \
+                    <td>'+ result[i]["date"] + '</td> \
+                    <td>'+ result[i]["time"] + '</td> \
+                    <td>'+ result[i]["description"] + '</td> \
                 </tr >');
         }
         $("#table").toggleClass("hidden");

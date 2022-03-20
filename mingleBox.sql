@@ -3,7 +3,7 @@
 -- https://www.phpmyadmin.net/
 --
 -- Host: localhost
--- Generation Time: Mar 17, 2022 at 05:26 PM
+-- Generation Time: Mar 20, 2022 at 08:35 AM
 -- Server version: 10.4.21-MariaDB
 -- PHP Version: 8.0.10
 
@@ -66,7 +66,8 @@ CREATE TABLE `buyers` (
 
 INSERT INTO `buyers` (`id`, `username`, `company`, `mail`, `password`, `date`, `verified`, `pushId`) VALUES
 (1, 'hello3', 'hello', 'hello1@gmail.com', 'a665a45920422f9d417e4867efdc4fb8a04a1f3fff1fa07e998e86f7f7a27ae3', '2021-12-23', 'yes', NULL),
-(8, 'Vishnu', 'UEC', 'hallellujah@gmail.com', 'a665a45920422f9d417e4867efdc4fb8a04a1f3fff1fa07e998e86f7f7a27ae3', '2021-12-29', 'yes', NULL);
+(8, 'Vishnu', 'UEC', 'hallellujah@gmail.com', 'a665a45920422f9d417e4867efdc4fb8a04a1f3fff1fa07e998e86f7f7a27ae3', '2021-12-29', 'yes', NULL),
+(9, '123', '123', '1237@gmail.com', 'a665a45920422f9d417e4867efdc4fb8a04a1f3fff1fa07e998e86f7f7a27ae3', '2022-03-18', 'yes', NULL);
 
 -- --------------------------------------------------------
 
@@ -197,7 +198,17 @@ INSERT INTO `chat` (`id`, `message`, `datetime`, `sender`, `senderType`, `receiv
 (107, 'hh', '2022-03-16 07:20:41', 1, 'buyer', 2, 'coder'),
 (108, 'j', '2022-03-16 07:20:48', 2, 'coder', 1, 'buyer'),
 (109, 'Hi', '2022-03-16 07:22:08', 1, 'buyer', 2, 'coder'),
-(110, 'hey', '2022-03-16 16:14:11', 2, 'coder', 1, 'buyer');
+(110, 'hey', '2022-03-16 16:14:11', 2, 'coder', 1, 'buyer'),
+(111, 'Hi', '2022-03-20 07:24:15', 1, 'buyer', 2, 'coder'),
+(112, 'hello', '2022-03-20 07:24:23', 1, 'buyer', 2, 'coder'),
+(113, 'hai', '2022-03-20 07:24:33', 1, 'buyer', 2, 'coder'),
+(114, 'hello', '2022-03-20 07:24:40', 2, 'coder', 1, 'buyer'),
+(115, 'hei', '2022-03-20 07:24:44', 1, 'buyer', 2, 'coder'),
+(116, 'thanks', '2022-03-20 07:24:49', 1, 'buyer', 2, 'coder'),
+(117, '👍', '2022-03-20 07:24:56', 1, 'buyer', 2, 'coder'),
+(118, 'welcome😁', '2022-03-20 07:25:14', 2, 'coder', 1, 'buyer'),
+(119, '😃', '2022-03-20 07:25:26', 2, 'coder', 1, 'buyer'),
+(120, 'mm', '2022-03-20 07:26:09', 1, 'buyer', 2, 'coder');
 
 -- --------------------------------------------------------
 
@@ -221,7 +232,8 @@ CREATE TABLE `coders` (
 
 INSERT INTO `coders` (`id`, `username`, `mail`, `password`, `technology`, `date`, `pushId`) VALUES
 (2, 'hello', 'hello@gmail.com', 'a665a45920422f9d417e4867efdc4fb8a04a1f3fff1fa07e998e86f7f7a27ae3', '[\"django\", \"flask\",\"python\"]', '2021-12-23', NULL),
-(8, 'VM', 'hellohai@gmail.com', 'a665a45920422f9d417e4867efdc4fb8a04a1f3fff1fa07e998e86f7f7a27ae3', '[\"python\"]', '2021-12-29', NULL);
+(8, 'VM', 'hellohai@gmail.com', 'a665a45920422f9d417e4867efdc4fb8a04a1f3fff1fa07e998e86f7f7a27ae3', '[\"python\"]', '2021-12-29', NULL),
+(9, '123', '123@gmail.com', 'a665a45920422f9d417e4867efdc4fb8a04a1f3fff1fa07e998e86f7f7a27ae3', '[]', '2022-03-18', NULL);
 
 -- --------------------------------------------------------
 
@@ -299,7 +311,7 @@ CREATE TABLE `projects` (
 
 INSERT INTO `projects` (`id`, `name`, `description`, `technology`, `timestamp`, `cost`, `finalCost`, `coderId`, `buyerId`) VALUES
 (1, 'Mingle Box', 'hello', '[\"flask\"]', '2021-12-23 12:56:05', '15000', '28000', 2, 1),
-(2, 'Agri', 'Agri', '[\"flask\"]', '2022-03-03 14:56:17', '2000', NULL, 2, NULL);
+(2, 'Agri', 'Agri', '[\"flask\"]', '2022-03-03 14:56:17', '2000', '300000', 2, 1);
 
 -- --------------------------------------------------------
 
@@ -517,19 +529,19 @@ ALTER TABLE `bids`
 -- AUTO_INCREMENT for table `buyers`
 --
 ALTER TABLE `buyers`
-  MODIFY `id` int(255) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=9;
+  MODIFY `id` int(255) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=10;
 
 --
 -- AUTO_INCREMENT for table `chat`
 --
 ALTER TABLE `chat`
-  MODIFY `id` int(255) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=111;
+  MODIFY `id` int(255) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=121;
 
 --
 -- AUTO_INCREMENT for table `coders`
 --
 ALTER TABLE `coders`
-  MODIFY `id` int(255) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=9;
+  MODIFY `id` int(255) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=10;
 
 --
 -- AUTO_INCREMENT for table `options`

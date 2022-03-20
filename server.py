@@ -235,7 +235,7 @@ def coderDashboard():
     conn.execute("""Select username,mail, 
                         (Select count(id) from projects where coderId=(Select id from coders where sha2(mail,256)=%s) and buyerId is not NULL) as completedProjects,
                         (Select count(distinct buyerId) from projects where coderId=(Select id from coders where sha2(mail,256)=%s) and buyerId is not NULL) as uniqueBuyers,
-                        coalesce((Select sum(finalCost) from projects where coderId=(Select id from coders where sha2(mail,256)=%s) and buyerId is not NULL),0) as earned
+                        coalesce((Select sum(amount)*0.98 from payments where receiverId=(Select id from coders where sha2(mail,256)=%s)),0) as earned
                     from coders where sha2(mail,256)=%s""",
         [request.form.get("id"),request.form.get("id"),request.form.get("id"),request.form.get("id")]
     )
@@ -325,7 +325,7 @@ def buyerPaymentHistory():
 # ! coder payment history list
 @app.route('/coderPaymentHistory', methods=['POST'])
 def coderPaymentHistory():
-    conn.execute("""Select p.id as id,p.amount as amount,p.description as description,p.datetime as datetime,b.username as sender from payments p inner join buyers b on p.senderId=b.id where p.receiverId = (Select id from coders where sha2(mail,256)=%s)""",[request.form.get("id")])
+    conn.execute("""Select p.id as id,p.amount*0.98 as amount,p.description as description,p.datetime as datetime,b.username as sender from payments p inner join buyers b on p.senderId=b.id where p.receiverId = (Select id from coders where sha2(mail,256)=%s)""",[request.form.get("id")])
     result=conn.fetchall()
     print(result)
     return json.dumps(result,default=str)
@@ -523,6 +523,23 @@ def coderSelectBidder():
     print(conn._last_executed)
     if(count==0):
         return "error"
+    try:
+        conn.execute("""Select mail from buyers where sha2(mail,256)=%s""",
+                [request.form.get("buyerId")])
+        result=conn.fetchone()
+        header = {"Content-Type": "application/json; charset=utf-8","Authorization": "Basic MmVkNjBmYzctMWM1Mi00NDQwLTgzYWQtODdkOTA4YTk3ZDAw"}
+
+        payload = {"app_id": "94000518-7da5-44a5-a338-7efd79d09099",
+                "include_external_user_ids": [result["mail"]],
+                "channel_for_external_user_ids": "push",
+                "headings":{"en":"Congratulations"},
+                "contents": {"en": "You won a Bid!!"}}
+        
+        req = requests.post("https://onesignal.com/api/v1/notifications", headers=header, data=json.dumps(payload))
+        print(req.status_code, req.reason)
+    except:
+        pass
+
     return "done"
 
 # ! buyer request responders
@@ -531,6 +548,14 @@ def buyerRequestResponders():
     conn.execute("""Select (Select username from coders where coders.id=coderId) as username, (Select mail from coders where coders.id=coderId) as mail from responses where requestId=%s""",
             [request.form.get("requestId")])
     result=conn.fetchall()
+    return json.dumps(result,default=str)
+
+# ! coder tech info
+@app.route('/coderTechInfo', methods=['POST'])
+def coderTechInfo():
+    conn.execute("""Select sha2(id,256) as id, Coalesce((Select score from score where score.coderId=(select id from coders where sha2(mail,256)=%s) and score.technologyId=technology.id),0) as score from technology where technology=%s""",
+            [request.form.get("id"),request.form.get("technology")])
+    result=conn.fetchone()
     return json.dumps(result,default=str)
 
 
@@ -620,16 +645,19 @@ def get_messages():
         print(json.dumps(result))
     return json.dumps(result)
 
+# ! admin dashboard
 @app.route('/admin', methods=['GET'])
 def admin():
     if(request.cookies.get("acc")):
         return render_template("index.html")
     return redirect("/adminLogin")
 
+# ! admin login
 @app.route('/adminLogin', methods=['GET'])
 def adminLogin():
     return render_template("login.html")
 
+# ! admin login validation
 @app.route('/adminValidate', methods=['POST'])
 def adminValidate():
     if(request.form.get("mail")=="123@gmail.com" and request.form.get("password")=="123"):
@@ -639,7 +667,7 @@ def adminValidate():
     else:
         return "error"
 
-
+# ! admin home page info
 @app.route('/adminHome', methods=['POST'])
 def adminHome():
     conn.execute("""SELECT company,(Select count(id) from bids where buyerId in (Select b.id from buyers b where b.company = bc.company)) as bids,(Select count(id) from projects where buyerId in (Select b.id from buyers b where b.company = bc.company)) as bought FROM `buyers` bc group by company;""")
@@ -647,19 +675,28 @@ def adminHome():
     print(result)
     return json.dumps(result,default=str)
 
-
+# ! admin coders page
 @app.route('/adminCoders', methods=['GET'])
 def adminCoders():
     if(request.cookies.get("acc")):
         return render_template("coders.html")
     return redirect("/adminLogin")
 
+# ! admin buyers page
 @app.route('/adminBuyers', methods=['GET'])
 def adminBuyers():
     if(request.cookies.get("acc")):
         return render_template("buyers.html")
     return redirect("/adminLogin")
 
+# ! admin payment page
+@app.route('/adminPayments', methods=['GET'])
+def adminPayments():
+    if(request.cookies.get("acc")):
+        return render_template("payments.html")
+    return redirect("/adminLogin")
+
+# ! admin coders List
 @app.route('/adminCodersList', methods=['POST'])
 def adminCodersList():
     if request.method=="POST":
@@ -668,6 +705,7 @@ def adminCodersList():
         print(result)
     return json.dumps(result,default=str)
 
+# ! admin buyers list
 @app.route('/adminBuyersList', methods=['POST'])
 def adminBuyersList():
     if request.method=="POST":
@@ -676,14 +714,39 @@ def adminBuyersList():
         print(result)
     return json.dumps(result,default=str)
 
+# ! admin verify buyers
 @app.route('/adminVerifyBuyer', methods=['POST'])
 def adminVerifyBuyer():
     count=conn.execute("""Update buyers set verified='yes' where sha2(id,256)=%s""",[request.form.get("id")])
     myconn.commit()
     if(count==0):
         return "error"
+    try:
+        conn.execute("""Select mail from buyers where sha2(id,256)=%s""",
+                [request.form.get("id")])
+        result=conn.fetchone()
+        header = {"Content-Type": "application/json; charset=utf-8","Authorization": "Basic MmVkNjBmYzctMWM1Mi00NDQwLTgzYWQtODdkOTA4YTk3ZDAw"}
+
+        payload = {"app_id": "94000518-7da5-44a5-a338-7efd79d09099",
+                "include_external_user_ids": [result["mail"]],
+                "channel_for_external_user_ids": "push",
+                "headings":{"en":"Congratulations"},
+                "contents": {"en": "You have been verified"}}
+        
+        req = requests.post("https://onesignal.com/api/v1/notifications", headers=header, data=json.dumps(payload))
+        print(req.status_code, req.reason)
+    except Exception as e:
+        print(e)
     return "done"
 
+# ! admin buyers list
+@app.route('/adminPaymentsList', methods=['POST'])
+def adminPaymentsList():
+    if request.method=="POST":
+        conn.execute("""Select amount*0.02 as amount, (Select username from buyers where id=senderId) as 'from', (Select username from coders where id=receiverId) as 'to', DATE_FORMAT(datetime,'%c/%e/%Y') as date, DATE_FORMAT(datetime,'%r') as time, description from payments""")
+        result=conn.fetchall()
+        print(result)
+    return json.dumps(result,default=str)
 
 if __name__ == '__main__':
     socketio.run(app, debug=True,host="192.168.18.2",port=3000)

@@ -1,0 +1,268 @@
+<html>
+
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@4.6.1/dist/css/bootstrap.min.css">
+    <script src="https://cdn.jsdelivr.net/npm/jquery@3.6.0/dist/jquery.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/popper.js@1.16.1/dist/umd/popper.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@4.6.1/dist/js/bootstrap.bundle.min.js"></script>
+    <script src="https://momentjs.com/downloads/moment.js"></script>
+    <title>Add technology</title>
+    <style>
+        body {
+
+            background-color: rgba(0, 123, 255);
+        }
+
+        nav {
+            box-shadow: 0 4px 8px 0 rgba(0, 0, 0, 0.1), 0 6px 20px 0 rgba(0, 0, 0, 0.09);
+        }
+
+        h3 {
+            margin-top: 35px;
+        }
+
+        .container {
+            margin-top: 20px;
+            width: 400px;
+        }
+
+        .hidden {
+            display: none;
+        }
+
+        .spinner-border {
+            margin-top: 30%;
+        }
+    </style>
+</head>
+
+<body>
+    <nav class="navbar navbar-expand-lg navbar-light bg-light">
+        <a class="navbar-brand text-primary" href="#">Add Technology</a>
+        <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarSupportedContent"
+            aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
+            <span class="navbar-toggler-icon"></span>
+        </button>
+
+    </nav>
+    <div class="container">
+        <form action="/adminAddNewTechnology" method="POST" id="form">
+            <h3>Technology</h3>
+            <div class="form-group">
+                <label for="question">New Technology</label>
+                <input type="text" name="technology" id="technology" required class="form-control"
+                    placeholder="Specify the new technology">
+            </div>
+            <h3>Question 1</h3>
+            <div class="form-group">
+                <label for="question">Question 1</label>
+                <input type="text" name="question1" id="question" required class="form-control"
+                    placeholder="Enter question">
+            </div>
+            <div class="form-group">
+                <label>Option for Question 1</label>
+                <input type="text" name="option1[]" id="option" required class="form-control"
+                    placeholder="Enter option">
+            </div>
+            <div class="form-group">
+                <label>Option for Question 1</label>
+                <input type="text" name="option1[]" id="option" required class="form-control"
+                    placeholder="Enter option">
+            </div>
+            <div class="form-group">
+                <label>Option for Question 1</label>
+                <input type="text" name="option1[]" id="option" required class="form-control"
+                    placeholder="Enter option">
+            </div>
+            <div class="form-group">
+                <label>Option for Question 1</label>
+                <input type="text" name="option1[]" id="option" required class="form-control"
+                    placeholder="Enter option">
+            </div>
+            <div class="form-group">
+                <label>Answer for Question 1</label>
+                <Select class="form-control" id="answer1" name="answer1">
+                    <option value="0">Option 1</option>
+                    <option value="1">Option 2</option>
+                    <option value="2">Option 3</option>
+                    <option value="3">Option 4</option>
+                </Select>
+            </div>
+            <h3>Question 2</h3>
+            <div class="form-group">
+                <label for="question">Question 2</label>
+                <input type="text" name="question2" id="question" required class="form-control"
+                    placeholder="Enter question">
+            </div>
+            <div class="form-group">
+                <label>Option for Question 2</label>
+                <input type="text" name="option2[]" id="option" required class="form-control"
+                    placeholder="Enter option">
+            </div>
+            <div class="form-group">
+                <label>Option for Question 2</label>
+                <input type="text" name="option2[]" id="option" required class="form-control"
+                    placeholder="Enter option">
+            </div>
+            <div class="form-group">
+                <label>Option for Question 2</label>
+                <input type="text" name="option2[]" id="option" required class="form-control"
+                    placeholder="Enter option">
+            </div>
+            <div class="form-group">
+                <label>Option for Question 2</label>
+                <input type="text" name="option2[]" id="option" required class="form-control"
+                    placeholder="Enter option">
+            </div>
+            <div class="form-group">
+                <label>Answer for Question 2</label>
+                <Select class="form-control" id="answer2" name="answer2">
+                    <option value="0">Option 1</option>
+                    <option value="1">Option 2</option>
+                    <option value="2">Option 3</option>
+                    <option value="3">Option 4</option>
+                </Select>
+            </div>
+            <h3>Question 3</h3>
+            <div class="form-group">
+                <label for="question">Question 3</label>
+                <input type="text" name="question3" id="question" required class="form-control"
+                    placeholder="Enter question">
+            </div>
+            <div class="form-group">
+                <label>Option for Question 3</label>
+                <input type="text" name="option3[]" id="option" required class="form-control"
+                    placeholder="Enter option">
+            </div>
+            <div class="form-group">
+                <label>Option for Question 3</label>
+                <input type="text" name="option3[]" id="option" required class="form-control"
+                    placeholder="Enter option">
+            </div>
+            <div class="form-group">
+                <label>Option for Question 3</label>
+                <input type="text" name="option3[]" id="option" required class="form-control"
+                    placeholder="Enter option">
+            </div>
+            <div class="form-group">
+                <label>Option for Question 3</label>
+                <input type="text" name="option3[]" id="option" required class="form-control"
+                    placeholder="Enter option">
+            </div>
+            <div class="form-group">
+                <label>Answer for Question 3</label>
+                <Select class="form-control" id="answer3" name="answer3">
+                    <option value="0">Option 1</option>
+                    <option value="1">Option 2</option>
+                    <option value="2">Option 3</option>
+                    <option value="3">Option 4</option>
+                </Select>
+            </div>
+            <h3>Question 4</h3>
+            <div class="form-group">
+                <label for="question">Question 4</label>
+                <input type="text" name="question4" id="question" required class="form-control"
+                    placeholder="Enter question">
+            </div>
+            <div class="form-group">
+                <label>Option for Question 4</label>
+                <input type="text" name="option4[]" id="option" required class="form-control"
+                    placeholder="Enter option">
+            </div>
+            <div class="form-group">
+                <label>Option for Question 4</label>
+                <input type="text" name="option4[]" id="option" required class="form-control"
+                    placeholder="Enter option">
+            </div>
+            <div class="form-group">
+                <label>Option for Question 4</label>
+                <input type="text" name="option4[]" id="option" required class="form-control"
+                    placeholder="Enter option">
+            </div>
+            <div class="form-group">
+                <label>Option for Question 4</label>
+                <input type="text" name="option4[]" id="option" required class="form-control"
+                    placeholder="Enter option">
+            </div>
+            <div class="form-group">
+                <label>Answer for Question 4</label>
+                <Select class="form-control" id="answer4" name="answer4">
+                    <option value="0">Option 1</option>
+                    <option value="1">Option 2</option>
+                    <option value="2">Option 3</option>
+                    <option value="3">Option 4</option>
+                </Select>
+            </div>
+            <h3>Question 5</h3>
+            <div class="form-group">
+                <label for="question">Question 5</label>
+                <input type="text" name="question5" id="question" required class="form-control"
+                    placeholder="Enter question">
+            </div>
+            <div class="form-group">
+                <label>Option for Question 5</label>
+                <input type="text" name="option5[]" id="option" required class="form-control"
+                    placeholder="Enter option">
+            </div>
+            <div class="form-group">
+                <label>Option for Question 5</label>
+                <input type="text" name="option5[]" id="option" required class="form-control"
+                    placeholder="Enter option">
+            </div>
+            <div class="form-group">
+                <label>Option for Question 5</label>
+                <input type="text" name="option5[]" id="option" required class="form-control"
+                    placeholder="Enter option">
+            </div>
+            <div class="form-group">
+                <label>Option for Question 5</label>
+                <input type="text" name="option5[]" id="option" required class="form-control"
+                    placeholder="Enter option">
+            </div>
+            <div class="form-group">
+                <label>Answer for Question 5</label>
+                <Select class="form-control" id="answer5" name="answer5">
+                    <option value="0">Option 1</option>
+                    <option value="1">Option 2</option>
+                    <option value="2">Option 3</option>
+                    <option value="3">Option 4</option>
+                </Select>
+            </div>
+            <div class="form-group">
+                <input type="submit" value="Add" class="btn btn-danger btn-block">
+            </div>
+        </form>
+    </div>
+</body>
+
+</html>
+
+<script>
+    $("#form").submit(function (e) {
+        e.preventDefault();
+        var form = $(this);
+        var actionUrl = form.attr('action');
+        $.ajax({
+            type: "POST",
+            url: actionUrl,
+            data: form.serialize(),
+            success: function (data) {
+                try {
+                    if (data == "done");
+                    alert("Technology added successfully");
+                    window.location.replace("/adminTechnology");
+                }
+                catch (e) {
+                    console.log(e);
+                    alert("Something went wrong.");
+                }
+            },
+            error: function (data) {
+                console.log(data);
+                alert("Something went wrong. Try again later.");
+            }
+        });
+    });
+</script>

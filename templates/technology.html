@@ -7,7 +7,8 @@
     <script src="https://cdn.jsdelivr.net/npm/jquery@3.6.0/dist/jquery.min.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/popper.js@1.16.1/dist/umd/popper.min.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@4.6.1/dist/js/bootstrap.bundle.min.js"></script>
-    <title>Buyers</title>
+    <script src="https://momentjs.com/downloads/moment.js"></script>
+    <title>Coders</title>
     <style>
         nav {
             box-shadow: 0 4px 8px 0 rgba(0, 0, 0, 0.1), 0 6px 20px 0 rgba(0, 0, 0, 0.09);
@@ -40,8 +41,8 @@
                 <li class="nav-item">
                     <a class="nav-link" href="/admin">Home</a>
                 </li>
-                <li class="nav-item active">
-                    <a class="nav-link text-primary" href="#">Buyers</a>
+                <li class="nav-item">
+                    <a class="nav-link" href="/adminBuyers">Buyers</a>
                 </li>
                 <li class="nav-item">
                     <a class="nav-link" href="/adminCoders">Coders</a>
@@ -49,10 +50,15 @@
                 <li class="nav-item">
                     <a class="nav-link" href="/adminPayments">Payments</a>
                 </li>
-                <li class="nav-item">
-                    <a class="nav-link" href="/adminTechnology">Technology</a>
+                <li class="nav-item active">
+                    <a class="nav-link  text-primary" href="#">Technology</a>
                 </li>
             </ul>
+            <form class="form-inline my-2 my-lg-0" id="form">
+                <select name="technology" id="technology" class="form-control mr-sm-2"></select>
+                <button class="btn btn-outline-primary my-2 my-sm-0 mr-sm-2" type="submit">Search</button>
+                <a class="btn btn-primary my-2 my-sm-0" href="/adminAddTechnology">Add Technology</a>
+            </form>
         </div>
     </nav>
     <div class="container">
@@ -60,15 +66,12 @@
             <thead class="thead-dark">
                 <tr>
                     <th scope="col">#</th>
-                    <th scope="col">Username</th>
-                    <th scope="col">Company</th>
-                    <th scope="col">Mail</th>
-                    <th scope="col">Join Date</th>
-                    <th scope="col">Verification Status</th>
+                    <th scope="col">Question</th>
+                    <th scope="col">Options</th>
+                    <th scope="col">Answer</th>
                 </tr>
             </thead>
-            <tbody>
-            </tbody>
+            <tbody></tbody>
         </table>
         <center>
             <div class="spinner-border" role="status">
@@ -85,7 +88,7 @@
     $(document).ready(function () {
         $.ajax({
             type: "POST",
-            url: "/adminBuyersList",
+            url: "/adminTechnologyList",
             success: function (data) {
                 try {
                     result = JSON.parse(data);
@@ -106,37 +109,31 @@
 
     function load(result) {
         for (var i = 0; i < result.length; i++) {
-            $('#table > tbody:last-child').append('<tr>\
-                <th scope = "row" >'+ (i + 1) + '</th>\
-                    <td>'+ result[i]["username"] + '</td> \
-                    <td>'+ result[i]["company"] + '</td> \
-                    <td>'+ result[i]["mail"] + '</td> \
-                    <td>'+ result[i]["date"] + '</td> \
-                    <td>'+ (result[i]["verified"] == 'no' ? '<button class="btn btn-primary" onclick="update(\'' + result[i]["id"] + '\')">Verify</button>' : 'Verified') + '</td> \
-                </tr >');
+            $('#technology').append('\
+            <option value="'+ result[i]["id"] + '">' + result[i]["technology"] + '</option>');
         }
         $("#table").toggleClass("hidden");
         $(".spinner-border").toggleClass("hidden");
     }
 
-    function update(id) {
-        console.log(id);
+    $("#form").submit(function (e) {
+        $('#table > tbody:last-child').html('');
+        $("#table").toggleClass("hidden");
+        $(".spinner-border").toggleClass("hidden");
+        e.preventDefault();
         $.ajax({
             type: "POST",
-            url: "/adminVerifyBuyer",
-            data: { "id": id },
+            url: "/adminTechnologyQuestion",
+            data: { "id": $("#technology").val() },
             success: function (data) {
                 try {
-                    if (data == "done") {
-                        location.reload();
-                    }
-                    else {
-                        alert("Something went wrong. Try again later.");
-                    }
+                    result = JSON.parse(data);
+                    console.log(result);
+                    loadTable(result);
                 }
                 catch (e) {
                     console.log(e);
-                    alert("Something went wrong. Try again later.");
+                    alert("Something went wrong.");
                 }
             },
             error: function (data) {
@@ -144,5 +141,18 @@
                 alert("Something went wrong. Try again later.");
             }
         });
+    });
+
+    function loadTable(result) {
+        for (var i = 0; i < result.length; i++) {
+            $('#table > tbody:last-child').append('<tr>\
+                <th scope = "row" >'+ (i + 1) + '</th>\
+                    <td>'+ result[i]["question"] + '</td> \
+                    <td>'+ result[i]["options"] + '</td> \
+                    <td>'+ result[i]["answer"] + '</td> \
+                </tr >');
+        }
+        $("#table").toggleClass("hidden");
+        $(".spinner-border").toggleClass("hidden");
     }
 </script>

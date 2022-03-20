@@ -246,11 +246,11 @@ def coderDashboard():
 # ! buyer dashboard
 @app.route('/buyerDashboard', methods=['POST'])
 def buyerDashboard():
-    conn.execute("""Select
+    conn.execute("""Select username, mail, 
                         (Select count(id) from projects where buyerId=(Select id from buyers where sha2(mail,256)=%s)) as bids,
                         (Select count(id) from requests where buyerId=(Select id from buyers where sha2(mail,256)=%s)) as requests,
-                        coalesce((Select sum(amount) from payments where senderId=(Select id from buyers where sha2(mail,256)=%s)),0) as spent""",
-        [request.form.get("id"),request.form.get("id"),request.form.get("id")]
+                        coalesce((Select sum(amount) from payments where senderId=(Select id from buyers where sha2(mail,256)=%s)),0) as spent from buyers where sha2(mail,256)=%s""",
+        [request.form.get("id"),request.form.get("id"),request.form.get("id"),request.form.get("id")]
     )
     result=conn.fetchall()
     print(result)
@@ -333,7 +333,7 @@ def coderPaymentHistory():
 # ! coder chat lists
 @app.route('/coderChatList', methods=['POST'])
 def coderChatList():
-    conn.execute("""Select id,(Select concat(COALESCE((Select "You: " from chat where id=T.id and senderType="coder"),''),message) from chat c where id= T.id) as message,(Select datetime from chat c where id= T.id) as datetime,chatWith,chatWithId from (Select max(id) as id,if(strcmp(senderType,"coder")=0,(Select username from buyers where id= receiver),(Select username from buyers where id= sender)) as chatWith,if(strcmp(senderType,"coder")=0,(select sha2(mail,256) from buyers where id=receiver),(select sha2(mail,256) from buyers where id=sender)) as chatWithId from chat where (sender=(Select id from coders where sha2(mail,256)=%s) and senderType="coder") or (receiver=(Select id from coders where sha2(mail,256)=%s) and receiverType="coder")) T group by chatWithId;""",[request.form.get("id"),request.form.get("id")])
+    conn.execute("""select id,concat(if(strcmp(senderType,"coder")=0,"You: ",""),message) as message, datetime,if(strcmp(senderType,"coder")=0,(Select sha2(mail,256) from buyers where id= receiver),(Select sha2(mail,256) from buyers where id= sender)) as chatWithId, if(strcmp(senderType,"coder")=0,(Select username from buyers where id= receiver),(Select username from buyers where id= sender)) as chatWith from chat where id in (select id from (Select max(id) as id,if(strcmp(senderType,"coder")=0,receiver,sender) as chatWithId from chat where (sender=(select id from coders where sha2(mail,256)=%s) and senderType="coder") or (receiver=(select id from coders where sha2(mail,256)=%s) and receiverType="coder") group by chatWithId) t1) order by datetime desc;""",[request.form.get("id"),request.form.get("id")])
     result=conn.fetchall()
     print(result)
     return json.dumps(result,default=str)
@@ -341,7 +341,7 @@ def coderChatList():
 # ! buyer chat lists
 @app.route('/buyerChatList', methods=['POST'])
 def buyerChatList():
-    conn.execute("""Select id,(Select concat(COALESCE((Select "You: " from chat where id=T.id and senderType="buyer"),''),message) from chat c where id= T.id) as message,(Select datetime from chat c where id= T.id) as datetime,chatWith,chatWithId from (Select max(id) as id,if(strcmp(senderType,"buyer")=0,(Select username from coders where id= receiver),(Select username from coders where id= sender)) as chatWith,if(strcmp(senderType,"buyer")=0,(select sha2(mail,256) from coders where id=receiver),(select sha2(mail,256) from coders where id=sender)) as chatWithId from chat where (sender=(Select id from buyers where sha2(mail,256)=%s) and senderType="buyer") or (receiver=(Select id from buyers where sha2(mail,256)=%s) and receiverType="buyer")) T group by chatWithId;""",[request.form.get("id"),request.form.get("id")])
+    conn.execute("""select id,concat(if(strcmp(senderType,"buyer")=0,"You: ",""),message) as message, datetime,if(strcmp(senderType,"buyer")=0,(Select sha2(mail,256) from coders where id= receiver),(Select sha2(mail,256) from coders where id= sender)) as chatWithId, if(strcmp(senderType,"buyer")=0,(Select username from coders where id= receiver),(Select username from coders where id= sender)) as chatWith from chat where id in (select id from (Select max(id) as id,if(strcmp(senderType,"buyer")=0,receiver,sender) as chatWithId from chat where (sender=(select id from buyers where sha2(mail,256)=%s) and senderType="buyer") or (receiver=(select id from buyers where sha2(mail,256)=%s) and receiverType="buyer") group by chatWithId) t1) order by datetime desc;""",[request.form.get("id"),request.form.get("id")])
     result=conn.fetchall()
     print(result)
     return json.dumps(result,default=str)
@@ -370,18 +370,21 @@ def coderExam():
 # ! coder exam submit
 @app.route('/coderExamSubmit', methods=['POST'])
 def coderExamSubmit():
-    conn.execute("""Select sha2(id,256) as questionId,(Select optionText from options where id= answer) as answer from questions where sha2(technologyId,256)=%s;""",[request.form.get("technologyId")])
+    conn.execute("""Select sha2(id,256) as questionId,(Select optionText from options where options.id= questions.answer) as answer from questions where sha2(technologyId,256)=%s;""",[request.form.get("technologyId")])
     result=conn.fetchall()
-    print(result)
+    print(result,"hello")
     exam=json.loads(request.form.get("answers"))
     mark=0
     for options in exam:
-        if options in result:
-            mark+=1
+        try:
+            if options in result:
+                mark+=1
+        except Exception as e:
+            print(e)
     print(exam)
     score=mark/len(exam)*100
     if(score>=60):
-        count=conn.execute("""Insert into score(id,technologyId,score,coderId) values(null,(Select id from technology where sha2(id,256)=%s),%s,(Select id from coders where sha2(mail,256)=%s))""",[request.form.get("technologyId"),score,request.form.get("id")])
+        count=conn.execute("""Insert into score(id,technologyId,score,coderId) values(null,(Select id from technology where sha2(id,256)=%s),%s,(Select id from coders where sha2(mail,256)=%s)) On duplicate key Update score=%s""",[request.form.get("technologyId"),score,request.form.get("id"),score])
         myconn.commit()
         if(count==0):
             return "error"
@@ -389,10 +392,14 @@ def coderExamSubmit():
         result=conn.fetchone()
         result["technology"]=json.loads(result["technology"])
         print(result)
+        if(result["name"] in result["technology"]):
+            return json.dumps({"score":mark/len(exam)*100})
         result["technology"].append(result["name"])
         print(result["technology"])
         count=conn.execute("""Update coders set technology=%s where sha2(mail,256)=%s""",[json.dumps(result["technology"]),request.form.get("id")])
         myconn.commit()
+        return json.dumps({"score":mark/len(exam)*100})
+    else:
         return json.dumps({"score":mark/len(exam)*100})
 
 
@@ -467,10 +474,7 @@ def projectList():
     conn.execute("""Select sha2(p.id,256) as id,p.name,p.cost,(select username from coders where coders.id=p.coderId) as coder,coalesce((Select max(amount) from bids where bids.projectId=p.id),0) as highestBid,p.technology,p.description,p.timestamp from projects p where buyerId is NULL""",
             )
     result=conn.fetchall()
-    if(len(result)==0):
-        return "error"
-    else:
-        return json.dumps(result,default=str)
+    return json.dumps(result,default=str)
 
 # ! buyers bid history
 @app.route('/buyerBidHistory', methods=['POST'])
@@ -509,7 +513,6 @@ def buyerChatHistory():
     conn.execute("""Select if(strcmp(senderType,"buyer")=0,"You",(Select sha2(mail,256) from coders where coders.id=sender)) as sender,message,datetime as dateTime from chat where (sender=(Select id from buyers where sha2(mail,256)=%s) and receiver=(Select id from coders where sha2(mail,256)=%s)) or (sender = (Select id from coders where sha2(mail,256)=%s) and receiver = (Select id from buyers where sha2(mail,256)=%s));""",
             [request.form.get("id"),request.form.get("chatWithId"),request.form.get("chatWithId"),request.form.get("id")])
     result=conn.fetchall()
-    print(result)
     if(len(result)==0):
         return "error"
     else:
@@ -696,6 +699,20 @@ def adminPayments():
         return render_template("payments.html")
     return redirect("/adminLogin")
 
+# ! admin technology page
+@app.route('/adminTechnology', methods=['GET'])
+def adminTechnology():
+    if(request.cookies.get("acc")):
+        return render_template("technology.html")
+    return redirect("/adminLogin")
+
+# ! admin technology page
+@app.route('/adminAddTechnology', methods=['GET'])
+def adminAddTechnology():
+    if(request.cookies.get("acc")):
+        return render_template("addTechnology.html")
+    return redirect("/adminLogin")
+
 # ! admin coders List
 @app.route('/adminCodersList', methods=['POST'])
 def adminCodersList():
@@ -747,6 +764,54 @@ def adminPaymentsList():
         result=conn.fetchall()
         print(result)
     return json.dumps(result,default=str)
+
+# ! admin technology list
+@app.route('/adminTechnologyList', methods=['POST','GET'])
+def adminTechnologyList():
+    if request.method=="POST" or request.method=="GET":
+        conn.execute("""Select sha2(id,256) as id, technology from technology""")
+        result=conn.fetchall()
+        print(result)
+    return json.dumps(result,default=str)
+
+# ! admin technology question
+@app.route('/adminTechnologyQuestion', methods=['POST','GET'])
+def adminTechnologyQuestion():
+    if request.method=="POST" or request.method=="GET":
+        conn.execute("""Select question, (select GROUP_CONCAT(optionText) from options where questionId=questions.id) as options, (select optionText from options where id=questions.answer) as answer from questions where sha2(technologyId,256)=%s""",[request.form.get("id")])
+        result=conn.fetchall()
+        print(result)
+    return json.dumps(result,default=str)
+
+# ! admin add technology question
+@app.route('/adminAddNewTechnology', methods=['POST','GET'])
+def adminAddNewTechnology():
+    if request.method=="POST" or request.method=="GET":
+        print(request.form)
+        count=conn.execute("""Insert into technology(id,technology) values(null,%s)""",[request.form.get("technology")])
+        techId=myconn.insert_id()
+        print(techId)
+        if count!=0:
+            for i in range(5):
+                count1=conn.execute("""Insert into questions(id,question,answer,technologyId) values(null,%s,0,%s)""",[request.form.get("question"+str(i+1)),techId])
+                id=myconn.insert_id()
+                if(count1==0):
+                    myconn.rollback()
+                    return "error"
+                count1=conn.execute("""Insert into options(id,optionText,questionId) values(null,%s,%s), (null,%s,%s), (null,%s,%s) ,(null,%s,%s)""",[request.form.getlist("option"+str(i+1)+"[]")[0],id,request.form.getlist("option"+str(i+1)+"[]")[1],id,request.form.getlist("option"+str(i+1)+"[]")[2],id,request.form.getlist("option"+str(i+1)+"[]")[3],id])
+                myconn.commit()
+                if(count1==0):
+                    myconn.rollback()
+                    return "error"
+                count1=conn.execute("""Update questions set answer=(select id from options where optionText=%s and questionId=%s) where id=%s""",[request.form.getlist("option"+str(i+1)+"[]")[int(request.form.get("answer"+str(i+1)))],id,id])
+                if(count1==0):
+                    myconn.rollback()
+                    return "error"
+            myconn.commit()
+            return "done"
+        else:
+            myconn.rollback()
+            return "error"
 
 if __name__ == '__main__':
     socketio.run(app, debug=True,host="192.168.18.2",port=3000)

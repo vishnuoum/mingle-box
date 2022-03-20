@@ -3,7 +3,7 @@
 -- https://www.phpmyadmin.net/
 --
 -- Host: localhost
--- Generation Time: Mar 20, 2022 at 08:35 AM
+-- Generation Time: Mar 20, 2022 at 06:46 PM
 -- Server version: 10.4.21-MariaDB
 -- PHP Version: 8.0.10
 
@@ -90,125 +90,13 @@ CREATE TABLE `chat` (
 --
 
 INSERT INTO `chat` (`id`, `message`, `datetime`, `sender`, `senderType`, `receiver`, `receiverType`) VALUES
-(2, 'hello', '2022-03-04 14:50:49', 2, 'coder', 1, 'buyer'),
-(3, 'hai', '2022-03-04 14:59:08', 2, 'coder', 1, 'buyer'),
-(4, 'gg', '2022-03-08 14:46:37', 1, 'buyer', 2, 'coder'),
-(5, 'hhh', '2022-03-08 15:06:01', 1, 'buyer', 2, 'coder'),
-(6, 'ttt', '2022-03-08 15:06:13', 1, 'buyer', 2, 'coder'),
-(7, 'gggg', '2022-03-08 15:06:31', 1, 'buyer', 2, 'coder'),
-(8, 'jj', '2022-03-08 15:13:16', 1, 'buyer', 2, 'coder'),
-(9, 'ii', '2022-03-08 15:13:46', 1, 'buyer', 2, 'coder'),
-(10, 'jj', '2022-03-08 15:20:38', 1, 'buyer', 2, 'coder'),
-(11, 'ggg', '2022-03-08 15:24:40', 1, 'buyer', 2, 'coder'),
-(12, 'ggg', '2022-03-08 15:25:54', 1, 'buyer', 2, 'coder'),
-(13, 'ggg', '2022-03-08 15:26:59', 1, 'buyer', 2, 'coder'),
-(14, 'j', '2022-03-08 15:27:02', 1, 'buyer', 2, 'coder'),
-(15, 'bbb', '2022-03-08 15:28:57', 1, 'buyer', 2, 'coder'),
-(16, 'ff', '2022-03-08 15:30:27', 1, 'buyer', 2, 'coder'),
-(17, 'tt', '2022-03-08 15:31:24', 1, 'buyer', 2, 'coder'),
-(18, 'cc', '2022-03-08 15:31:38', 1, 'buyer', 2, 'coder'),
-(19, 'hello', '2022-03-08 15:33:37', 1, 'buyer', 2, 'coder'),
-(20, 'ddd', '2022-03-08 15:34:33', 1, 'buyer', 2, 'coder'),
-(21, 'hh', '2022-03-08 15:38:26', 1, 'buyer', 2, 'coder'),
-(22, 'ff', '2022-03-08 15:42:59', 1, 'buyer', 2, 'coder'),
-(23, 'uu', '2022-03-08 15:44:54', 1, 'buyer', 2, 'coder'),
-(24, 'ggg', '2022-03-08 15:47:43', 1, 'buyer', 2, 'coder'),
-(25, 'uu', '2022-03-08 15:55:46', 1, 'buyer', 2, 'coder'),
-(26, 'hh', '2022-03-08 15:56:26', 1, 'buyer', 2, 'coder'),
-(27, 'hei', '2022-03-08 16:05:18', 1, 'buyer', 2, 'coder'),
-(28, 'hhh', '2022-03-08 16:07:15', 1, 'buyer', 2, 'coder'),
-(29, 'hh', '2022-03-08 16:12:29', 1, 'buyer', 2, 'coder'),
-(30, 'hhi', '2022-03-08 16:12:54', 1, 'buyer', 2, 'coder'),
-(31, 'gg', '2022-03-08 16:13:19', 1, 'buyer', 2, 'coder'),
-(32, 'hh', '2022-03-08 16:15:19', 1, 'buyer', 2, 'coder'),
-(33, 'xx', '2022-03-08 16:15:32', 1, 'buyer', 2, 'coder'),
-(34, 'mm', '2022-03-08 16:16:26', 1, 'buyer', 2, 'coder'),
-(35, 'dd', '2022-03-08 16:18:12', 1, 'buyer', 2, 'coder'),
-(36, 'hhi', '2022-03-08 16:18:20', 1, 'buyer', 2, 'coder'),
-(37, 'bb', '2022-03-08 16:18:57', 1, 'buyer', 2, 'coder'),
-(38, 'gg', '2022-03-08 16:19:03', 1, 'buyer', 2, 'coder'),
-(39, 'ygfh', '2022-03-08 16:19:11', 1, 'buyer', 2, 'coder'),
-(40, 'yy', '2022-03-08 16:19:20', 1, 'buyer', 2, 'coder'),
-(41, 'yy', '2022-03-08 16:22:20', 1, 'buyer', 2, 'coder'),
-(42, 'hh', '2022-03-08 16:22:29', 1, 'buyer', 2, 'coder'),
-(43, 'hi', '2022-03-08 16:24:09', 1, 'buyer', 2, 'coder'),
-(44, 'tt', '2022-03-08 16:24:20', 1, 'buyer', 2, 'coder'),
-(45, 'v', '2022-03-08 16:24:32', 1, 'buyer', 2, 'coder'),
-(46, 'ii', '2022-03-08 16:34:21', 1, 'buyer', 2, 'coder'),
-(47, 'gg', '2022-03-08 16:34:44', 1, 'buyer', 2, 'coder'),
-(48, 'j', '2022-03-08 16:36:05', 1, 'buyer', 2, 'coder'),
-(49, 'u', '2022-03-08 16:36:50', 1, 'buyer', 2, 'coder'),
-(50, 'vv', '2022-03-08 17:06:10', 1, 'buyer', 2, 'coder'),
-(51, 'ggg', '2022-03-08 17:16:36', 2, 'coder', 1, 'buyer'),
-(52, 'gg', '2022-03-08 17:17:33', 2, 'coder', 1, 'buyer'),
-(53, 'helloi', '2022-03-08 17:19:20', 2, 'coder', 1, 'buyer'),
-(54, 'hey', '2022-03-08 17:20:32', 2, 'coder', 1, 'buyer'),
-(55, 'oi', '2022-03-08 17:29:21', 1, 'buyer', 2, 'coder'),
-(56, 'hh', '2022-03-08 17:32:01', 1, 'buyer', 2, 'coder'),
-(57, 'hhi', '2022-03-08 17:32:13', 2, 'coder', 1, 'buyer'),
-(58, 'hey', '2022-03-08 17:32:20', 1, 'buyer', 2, 'coder'),
-(59, 'hello', '2022-03-08 17:32:27', 2, 'coder', 1, 'buyer'),
-(60, 'da', '2022-03-08 17:32:36', 2, 'coder', 1, 'buyer'),
-(61, 'da', '2022-03-08 17:32:50', 1, 'buyer', 2, 'coder'),
-(62, 'hi', '2022-03-08 17:32:57', 2, 'coder', 1, 'buyer'),
-(63, 'bye', '2022-03-08 17:33:06', 1, 'buyer', 2, 'coder'),
-(64, 'hello', '2022-03-08 17:33:17', 1, 'buyer', 2, 'coder'),
-(65, 'hey', '2022-03-15 15:59:52', 1, 'buyer', 2, 'coder'),
-(66, 'hi', '2022-03-15 15:59:58', 2, 'coder', 1, 'buyer'),
-(67, 'hello', '2022-03-15 16:00:02', 1, 'buyer', 2, 'coder'),
-(68, 'hello', '2022-03-15 16:00:09', 1, 'buyer', 2, 'coder'),
-(69, 'hi', '2022-03-15 16:00:14', 2, 'coder', 1, 'buyer'),
-(70, 'hih', '2022-03-15 16:00:19', 1, 'buyer', 2, 'coder'),
-(71, 'hi', '2022-03-15 16:00:20', 1, 'buyer', 2, 'coder'),
-(72, 'hello', '2022-03-15 16:00:25', 2, 'coder', 1, 'buyer'),
-(73, 'hi', '2022-03-15 17:24:21', 2, 'coder', 1, 'buyer'),
-(74, 'fff', '2022-03-15 17:26:11', 2, 'coder', 1, 'buyer'),
-(75, 'hei', '2022-03-15 17:26:24', 1, 'buyer', 2, 'coder'),
-(76, 'gg', '2022-03-15 17:26:38', 1, 'buyer', 2, 'coder'),
-(77, '  ', '2022-03-15 17:26:41', 2, 'coder', 1, 'buyer'),
-(78, 'fff', '2022-03-15 17:28:35', 2, 'coder', 1, 'buyer'),
-(79, 'hhh', '2022-03-15 17:28:40', 1, 'buyer', 2, 'coder'),
-(80, 'hh', '2022-03-15 17:28:43', 1, 'buyer', 2, 'coder'),
-(81, 'yyy', '2022-03-15 17:29:30', 2, 'coder', 1, 'buyer'),
-(82, 'nn', '2022-03-15 17:29:42', 1, 'buyer', 2, 'coder'),
-(83, 'kk', '2022-03-15 17:29:49', 2, 'coder', 1, 'buyer'),
-(84, 'ttttggg', '2022-03-15 17:29:55', 1, 'buyer', 2, 'coder'),
-(85, 'tttt', '2022-03-15 17:29:59', 2, 'coder', 1, 'buyer'),
-(86, 'ggg', '2022-03-15 17:30:01', 2, 'coder', 1, 'buyer'),
-(87, 'ji', '2022-03-15 17:30:25', 2, 'coder', 1, 'buyer'),
-(88, 'he', '2022-03-15 17:30:37', 1, 'buyer', 2, 'coder'),
-(89, 'ji', '2022-03-15 17:30:41', 2, 'coder', 1, 'buyer'),
-(90, 'hi', '2022-03-15 17:38:10', 2, 'coder', 1, 'buyer'),
-(91, 'hi', '2022-03-15 17:40:10', 1, 'buyer', 2, 'coder'),
-(92, 'hei', '2022-03-15 17:40:19', 2, 'coder', 1, 'buyer'),
-(93, 'hh', '2022-03-15 17:40:22', 1, 'buyer', 2, 'coder'),
-(94, 'hhhhj', '2022-03-15 17:40:27', 2, 'coder', 1, 'buyer'),
-(95, 'Interested', '2022-03-15 17:40:43', 2, 'coder', 1, 'buyer'),
-(96, 'Interested', '2022-03-15 17:42:31', 2, 'coder', 1, 'buyer'),
-(97, 'Interested in Needed Python Devs', '2022-03-15 17:44:31', 2, 'coder', 1, 'buyer'),
-(98, 'Interested in TTS engine', '2022-03-15 17:45:21', 2, 'coder', 1, 'buyer'),
-(99, 'Interested in Needed Python Devs 2', '2022-03-15 17:46:54', 2, 'coder', 1, 'buyer'),
-(100, 'tt', '2022-03-16 05:41:16', 2, 'coder', 1, 'buyer'),
-(101, 'jj', '2022-03-16 06:33:47', 2, 'coder', 1, 'buyer'),
-(102, 'n', '2022-03-16 06:34:26', 2, 'coder', 1, 'buyer'),
-(103, 'he', '2022-03-16 06:34:52', 2, 'coder', 1, 'buyer'),
-(104, 'hhhh', '2022-03-16 06:34:59', 1, 'buyer', 2, 'coder'),
-(105, 'ffffff', '2022-03-16 06:35:08', 2, 'coder', 1, 'buyer'),
-(106, 'chj', '2022-03-16 06:35:19', 1, 'buyer', 2, 'coder'),
-(107, 'hh', '2022-03-16 07:20:41', 1, 'buyer', 2, 'coder'),
-(108, 'j', '2022-03-16 07:20:48', 2, 'coder', 1, 'buyer'),
-(109, 'Hi', '2022-03-16 07:22:08', 1, 'buyer', 2, 'coder'),
-(110, 'hey', '2022-03-16 16:14:11', 2, 'coder', 1, 'buyer'),
-(111, 'Hi', '2022-03-20 07:24:15', 1, 'buyer', 2, 'coder'),
-(112, 'hello', '2022-03-20 07:24:23', 1, 'buyer', 2, 'coder'),
-(113, 'hai', '2022-03-20 07:24:33', 1, 'buyer', 2, 'coder'),
-(114, 'hello', '2022-03-20 07:24:40', 2, 'coder', 1, 'buyer'),
-(115, 'hei', '2022-03-20 07:24:44', 1, 'buyer', 2, 'coder'),
-(116, 'thanks', '2022-03-20 07:24:49', 1, 'buyer', 2, 'coder'),
-(117, '👍', '2022-03-20 07:24:56', 1, 'buyer', 2, 'coder'),
-(118, 'welcome😁', '2022-03-20 07:25:14', 2, 'coder', 1, 'buyer'),
-(119, '😃', '2022-03-20 07:25:26', 2, 'coder', 1, 'buyer'),
-(120, 'mm', '2022-03-20 07:26:09', 1, 'buyer', 2, 'coder');
+(145, 'Hi', '2022-03-20 17:39:12', 1, 'buyer', 2, 'coder'),
+(146, 'hello', '2022-03-20 17:39:23', 1, 'buyer', 2, 'coder'),
+(147, 'hi', '2022-03-20 17:39:29', 2, 'coder', 1, 'buyer'),
+(148, 'Hi', '2022-03-20 17:40:04', 9, 'buyer', 2, 'coder'),
+(149, '😂', '2022-03-20 17:40:45', 9, 'buyer', 2, 'coder'),
+(150, '😆', '2022-03-20 17:40:49', 9, 'buyer', 2, 'coder'),
+(151, 'hey', '2022-03-20 17:41:02', 2, 'coder', 9, 'buyer');
 
 -- --------------------------------------------------------
 
@@ -231,9 +119,9 @@ CREATE TABLE `coders` (
 --
 
 INSERT INTO `coders` (`id`, `username`, `mail`, `password`, `technology`, `date`, `pushId`) VALUES
-(2, 'hello', 'hello@gmail.com', 'a665a45920422f9d417e4867efdc4fb8a04a1f3fff1fa07e998e86f7f7a27ae3', '[\"django\", \"flask\",\"python\"]', '2021-12-23', NULL),
+(2, 'hello', 'hello@gmail.com', 'a665a45920422f9d417e4867efdc4fb8a04a1f3fff1fa07e998e86f7f7a27ae3', '[\"django\", \"flask\", \"python\", \"express.js\"]', '2021-12-23', NULL),
 (8, 'VM', 'hellohai@gmail.com', 'a665a45920422f9d417e4867efdc4fb8a04a1f3fff1fa07e998e86f7f7a27ae3', '[\"python\"]', '2021-12-29', NULL),
-(9, '123', '123@gmail.com', 'a665a45920422f9d417e4867efdc4fb8a04a1f3fff1fa07e998e86f7f7a27ae3', '[]', '2022-03-18', NULL);
+(9, '123', '123@gmail.com', 'a665a45920422f9d417e4867efdc4fb8a04a1f3fff1fa07e998e86f7f7a27ae3', '[\"python\", \"django\", \"flask\", \"express.js\"]', '2022-03-18', NULL);
 
 -- --------------------------------------------------------
 
@@ -261,7 +149,31 @@ INSERT INTO `options` (`id`, `optionText`, `questionId`) VALUES
 (7, 'List is a set', 5),
 (8, 'List is a collection of data', 5),
 (9, 'List is a set', 6),
-(10, 'List is a collection of data', 6);
+(10, 'List is a collection of data', 6),
+(75, 'Framework', 26),
+(76, 'Library', 26),
+(77, 'Micro framework', 27),
+(78, 'Library', 27),
+(79, 'Web app framework', 28),
+(80, 'Library', 28),
+(81, 'url', 28),
+(82, 'site', 28),
+(83, 'Python', 29),
+(84, 'Node.js', 29),
+(85, 'Java', 29),
+(86, 'Lua', 29),
+(87, 'Light weight', 30),
+(88, 'Minimal', 30),
+(89, 'Flexible', 30),
+(90, 'All of the above', 30),
+(91, 'Frontend', 31),
+(92, 'Backend', 31),
+(93, 'Both', 31),
+(94, 'None of the above', 31),
+(95, 'req', 32),
+(96, 'res', 32),
+(97, 'next', 32),
+(98, 'All of the above', 32);
 
 -- --------------------------------------------------------
 
@@ -335,7 +247,14 @@ INSERT INTO `questions` (`id`, `question`, `answer`, `technologyId`) VALUES
 (3, 'What is list?', '4', 1),
 (4, 'What is list?', '6', 1),
 (5, 'What is list?', '8', 1),
-(6, 'What is list?', '10', 1);
+(6, 'What is list?', '10', 1),
+(26, 'Django is a.......?', '75', 3),
+(27, 'Flask is .......?', '77', 4),
+(28, 'What is express?', '79', 17),
+(29, 'Express is used along?', '84', 17),
+(30, 'Features of express?', '90', 17),
+(31, 'Express is used in', '92', 17),
+(32, 'Arguments available in express route handler function', '98', 17);
 
 -- --------------------------------------------------------
 
@@ -409,10 +328,15 @@ CREATE TABLE `score` (
 --
 
 INSERT INTO `score` (`id`, `technologyId`, `score`, `coderId`) VALUES
-(2, 3, '75', 2),
-(3, 4, '80', 2),
+(2, 3, '100', 2),
+(3, 4, '100', 2),
 (5, 1, '100', 2),
-(13, 1, '100', 8);
+(13, 1, '100', 8),
+(14, 17, '100', 2),
+(18, 1, '80', 9),
+(19, 3, '100', 9),
+(20, 4, '100', 9),
+(21, 17, '100', 9);
 
 -- --------------------------------------------------------
 
@@ -431,9 +355,9 @@ CREATE TABLE `technology` (
 
 INSERT INTO `technology` (`id`, `technology`) VALUES
 (1, 'python'),
-(2, 'node.js'),
 (3, 'django'),
-(4, 'flask');
+(4, 'flask'),
+(17, 'express.js');
 
 --
 -- Indexes for dumped tables
@@ -507,7 +431,8 @@ ALTER TABLE `responses`
 -- Indexes for table `score`
 --
 ALTER TABLE `score`
-  ADD PRIMARY KEY (`id`);
+  ADD PRIMARY KEY (`id`),
+  ADD UNIQUE KEY `technologyId` (`technologyId`,`coderId`);
 
 --
 -- Indexes for table `technology`
@@ -535,7 +460,7 @@ ALTER TABLE `buyers`
 -- AUTO_INCREMENT for table `chat`
 --
 ALTER TABLE `chat`
-  MODIFY `id` int(255) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=121;
+  MODIFY `id` int(255) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=152;
 
 --
 -- AUTO_INCREMENT for table `coders`
@@ -547,7 +472,7 @@ ALTER TABLE `coders`
 -- AUTO_INCREMENT for table `options`
 --
 ALTER TABLE `options`
-  MODIFY `id` int(255) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=11;
+  MODIFY `id` int(255) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=99;
 
 --
 -- AUTO_INCREMENT for table `payments`
@@ -565,7 +490,7 @@ ALTER TABLE `projects`
 -- AUTO_INCREMENT for table `questions`
 --
 ALTER TABLE `questions`
-  MODIFY `id` int(255) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=8;
+  MODIFY `id` int(255) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=33;
 
 --
 -- AUTO_INCREMENT for table `requests`
@@ -583,13 +508,13 @@ ALTER TABLE `responses`
 -- AUTO_INCREMENT for table `score`
 --
 ALTER TABLE `score`
-  MODIFY `id` int(255) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=14;
+  MODIFY `id` int(255) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=22;
 
 --
 -- AUTO_INCREMENT for table `technology`
 --
 ALTER TABLE `technology`
-  MODIFY `id` int(255) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=5;
+  MODIFY `id` int(255) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=18;
 COMMIT;
 
 /*!40101 SET CHARACTER_SET_CLIENT=@OLD_CHARACTER_SET_CLIENT */;

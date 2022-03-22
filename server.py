@@ -40,28 +40,36 @@ def sessions():
 # ! Signup for coder  
 @app.route("/coderRegister", methods=['POST'])
 def coderRegister():
-    count=conn.execute("""Insert into coders(id,username,mail,password) Values(NULL,%s,%s,sha2(%s,256))""",[request.form.get("username"),request.form.get("mail"),request.form.get("password")])
-    myconn.commit()
-    print(count)
-    if(count==0):
+    try:
+        count=conn.execute("""Insert into coders(id,username,mail,password) Values(NULL,%s,%s,sha2(%s,256))""",[request.form.get("username"),request.form.get("mail"),request.form.get("password")])
+        myconn.commit()
+        print(count)
+        if(count==0):
+            return "error"
+        result={}
+        val=hashlib.sha256(request.form.get("mail").encode())
+        result["id"]= val.hexdigest()
+        return json.dumps(result)
+    except Exception as e:
+        print(e)
         return "error"
-    result={}
-    val=hashlib.sha256(request.form.get("mail").encode())
-    result["id"]= val.hexdigest()
-    return json.dumps(result)
 
 # ! Signup for buyers
 @app.route("/buyerRegister", methods=['POST'])
 def buyerRegister():
-    count=conn.execute("""Insert into buyers(id,username,mail,password,company) Values(NULL,%s,%s,sha2(%s,256),%s)""",[request.form.get("username"),request.form.get("mail"),request.form.get("password"),request.form.get("company")])
-    myconn.commit()
-    print(count)
-    if(count==0):
+    try:
+        count=conn.execute("""Insert into buyers(id,username,mail,password,company) Values(NULL,%s,%s,sha2(%s,256),%s)""",[request.form.get("username"),request.form.get("mail"),request.form.get("password"),request.form.get("company")])
+        myconn.commit()
+        print(count)
+        if(count==0):
+            return "error"
+        result={}
+        val=hashlib.sha256(request.form.get("mail").encode())
+        result["id"]= val.hexdigest()
+        return json.dumps(result)
+    except Exception as e:
+        print(e)
         return "error"
-    result={}
-    val=hashlib.sha256(request.form.get("mail").encode())
-    result["id"]= val.hexdigest()
-    return json.dumps(result)
 
 # ! Login for coders
 @app.route("/coderValidate", methods=['POST'])
@@ -561,7 +569,25 @@ def coderTechInfo():
     result=conn.fetchone()
     return json.dumps(result,default=str)
 
+# ! buyer reset password
+@app.route('/buyerPasswordReset', methods=['POST'])
+def buyerPasswordReset():
+    count=conn.execute("""Update buyers set `password`=sha2(%s,256) where sha2(mail,256)=%s and sha2(%s,256)=password""",[request.form.get("newPassword"),request.form.get("id"),request.form.get("password")])
+    myconn.commit()
+    print(conn._last_executed)
+    if(count==0):
+        return "error"
+    return "done"
 
+# ! coder reset password
+@app.route('/coderPasswordReset', methods=['POST'])
+def coderPasswordReset():
+    count=conn.execute("""Update coders set `password`=sha2(%s,256) where sha2(mail,256)=%s and sha2(%s,256)=password""",[request.form.get("newPassword"),request.form.get("id"),request.form.get("password")])
+    myconn.commit()
+    print(conn._last_executed)
+    if(count==0):
+        return "error"
+    return "done"
 
 def messageReceived(methods=['GET', 'POST']):
     print('message was received!!!')

@@ -385,7 +385,7 @@ def buyerPay():
                     "include_external_user_ids": [result["mail"]],
                     "channel_for_external_user_ids": "push",
                     "headings":{"en":"Payment Alert!!!!"},
-                    "contents": {"en": "You received a payment of Rs. "+request.form.get("amount")+" from "+result['name']}}
+                    "contents": {"en": "You received a payment of Rs. "+str(float(request.form.get("amount"))*0.98)+" from "+result['name']}}
             
             req = requests.post("https://onesignal.com/api/v1/notifications", headers=header, data=json.dumps(payload))
             print(req.status_code, req.reason)
@@ -401,7 +401,7 @@ def buyerPay():
 @app.route('/buyerPaymentHistory', methods=['POST'])
 def buyerPaymentHistory():
     try:
-        conn.execute("""Select id,amount,(Select username from coders where id=receiverId) as coder,datetime,description from payments where senderId=(Select id from buyers where SHA2(mail,256)=%s) order by datetime desc""",[request.form.get("id")])
+        conn.execute("""Select t1.id,t1.amount,(Select username from coders where id=t1.receiverId) as coder,t1.datetime,t1.description from payments t1 where senderId=(Select id from buyers where SHA2(mail,256)=%s) order by datetime desc""",[request.form.get("id")])
         result=conn.fetchall()
         print(result)
         return json.dumps(result,default=str)
@@ -413,7 +413,7 @@ def buyerPaymentHistory():
 @app.route('/coderPaymentHistory', methods=['POST'])
 def coderPaymentHistory():
     try:
-        conn.execute("""Select p.id as id,p.amount*0.98 as amount,p.description as description,p.datetime as datetime,b.username as sender from payments p inner join buyers b on p.senderId=b.id where p.receiverId = (Select id from coders where sha2(mail,256)=%s)""",[request.form.get("id")])
+        conn.execute("""Select p.id as id,p.amount*0.98 as amount,p.description as description,p.datetime as datetime,b.username as sender from payments p inner join buyers b on p.senderId=b.id where p.receiverId = (Select id from coders where sha2(mail,256)=%s) order by datetime desc""",[request.form.get("id")])
         result=conn.fetchall()
         print(result)
         return json.dumps(result,default=str)
@@ -679,8 +679,8 @@ def coderSelectBidder():
         if(count==0):
             return "error"
         try:
-            conn.execute("""Select mail from buyers where sha2(mail,256)=%s""",
-                    [request.form.get("buyerId")])
+            conn.execute("""Select mail,(Select name from projects where sha2(id,256)=%s) as project from buyers where sha2(mail,256)=%s""",
+                    [request.form.get("projectId"),request.form.get("buyerId")])
             result=conn.fetchone()
             header = {"Content-Type": "application/json; charset=utf-8","Authorization": "Basic MmVkNjBmYzctMWM1Mi00NDQwLTgzYWQtODdkOTA4YTk3ZDAw"}
 
@@ -692,6 +692,31 @@ def coderSelectBidder():
             
             req = requests.post("https://onesignal.com/api/v1/notifications", headers=header, data=json.dumps(payload))
             print(req.status_code, req.reason)
+
+            # send message to buyer
+            today = datetime.now()
+            print(today)
+            chatMessage={"receiver":request.form.get("buyerId"),
+                    "sender":request.form.get("id"),
+                    "message":"You won the bid for "+result["project"],
+                    "senderType":"coder",
+                    "receiverType":"buyer"}
+            if(chatMessage['receiver'] in users):
+                socketid=users[chatMessage['receiver']]
+            else:
+                socketid=''
+            print(chatMessage["receiver"])
+            count=conn.execute("""INSERT INTO chat(id,message,sender,senderType,receiver,receiverType) values(null,%s,if(strcmp(%s,'coder')=0,(Select id from coders where sha2(mail,256)=%s),(Select id from buyers where sha2(mail,256)=%s)),%s,if(strcmp(%s,'coder')=0,(Select id from coders where sha2(mail,256)=%s),(Select id from buyers where sha2(mail,256)=%s)),%s)""",[chatMessage["message"],chatMessage["senderType"],chatMessage["sender"],chatMessage["sender"],chatMessage["senderType"],chatMessage["receiverType"],chatMessage["receiver"],chatMessage["receiver"],chatMessage["receiverType"]])
+            myconn.commit()
+            print(conn._last_executed)
+            chatMessage["dateTime"]=str(today)
+            conn.execute("""Select if(strcmp(%s,'coder')=0,(Select username from coders where sha2(mail,256)=%s),(Select username from buyers where sha2(mail,256)=%s)) as chatWith""",
+                    [chatMessage["senderType"],chatMessage["sender"],chatMessage["sender"]])
+            result=conn.fetchone()
+            print(result)
+            chatMessage["chatWith"]=result["chatWith"]
+            socketio.emit('newMessage',chatMessage,room=socketid)
+
         except Exception as e:
             print(e)
             pass

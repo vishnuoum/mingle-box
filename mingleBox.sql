@@ -3,7 +3,7 @@
 -- https://www.phpmyadmin.net/
 --
 -- Host: localhost
--- Generation Time: Mar 23, 2022 at 04:32 PM
+-- Generation Time: Mar 24, 2022 at 02:29 PM
 -- Server version: 10.4.21-MariaDB
 -- PHP Version: 8.0.10
 
@@ -42,7 +42,8 @@ CREATE TABLE `bids` (
 INSERT INTO `bids` (`id`, `projectId`, `buyerId`, `datetime`, `amount`) VALUES
 (1, 1, 1, '2022-03-06 10:35:19', '28000'),
 (3, 2, 1, '2022-03-16 16:14:54', '300000'),
-(7, 3, 1, '2022-03-23 15:13:30', '1500');
+(7, 3, 1, '2022-03-23 15:13:30', '1500'),
+(8, 4, 1, '2022-03-24 12:44:39', '2000');
 
 -- --------------------------------------------------------
 
@@ -100,7 +101,16 @@ INSERT INTO `chat` (`id`, `message`, `datetime`, `sender`, `senderType`, `receiv
 (151, 'hey', '2022-03-20 17:41:02', 2, 'coder', 9, 'buyer'),
 (152, 'hi', '2022-03-22 15:18:29', 1, 'buyer', 2, 'coder'),
 (153, 'hey', '2022-03-22 15:18:35', 1, 'buyer', 2, 'coder'),
-(154, 'hello', '2022-03-22 15:18:39', 1, 'buyer', 2, 'coder');
+(154, 'hello', '2022-03-22 15:18:39', 1, 'buyer', 2, 'coder'),
+(155, 'You won the bid for Project', '2022-03-24 12:54:18', 2, 'coder', 1, 'buyer'),
+(156, 'hello', '2022-03-24 12:54:57', 2, 'coder', 1, 'buyer'),
+(157, 'You won the bid for Project', '2022-03-24 12:56:08', 2, 'coder', 1, 'buyer'),
+(158, 'hello', '2022-03-24 13:12:46', 1, 'buyer', 2, 'coder'),
+(159, 'helk', '2022-03-24 13:13:38', 2, 'coder', 9, 'buyer'),
+(160, 'hi', '2022-03-24 13:15:18', 1, 'buyer', 2, 'coder'),
+(161, 'Hi', '2022-03-24 13:17:43', 1, 'buyer', 9, 'coder'),
+(162, 'Interested in Project', '2022-03-24 13:21:02', 2, 'coder', 1, 'buyer'),
+(163, 'Interested in Project', '2022-03-24 13:23:45', 2, 'coder', 1, 'buyer');
 
 -- --------------------------------------------------------
 
@@ -205,7 +215,9 @@ INSERT INTO `payments` (`id`, `amount`, `senderId`, `receiverId`, `datetime`, `d
 (3, '25000', 1, 2, '2022-03-06 07:12:52', 'Mingle Box 3'),
 (4, '300000', 1, 2, '2022-03-23 13:33:30', 'Agri App payment'),
 (5, '100', 1, 2, '2022-03-23 14:01:24', 'test'),
-(6, '100', 1, 2, '2022-03-23 14:58:08', 'Test');
+(6, '100', 1, 2, '2022-03-23 14:58:08', 'Test'),
+(7, '2000', 1, 2, '2022-03-24 13:04:17', 'Project fund'),
+(8, '100', 1, 2, '2022-03-24 13:06:40', 'test');
 
 -- --------------------------------------------------------
 
@@ -232,8 +244,9 @@ CREATE TABLE `projects` (
 
 INSERT INTO `projects` (`id`, `name`, `description`, `technology`, `timestamp`, `cost`, `finalCost`, `coderId`, `buyerId`, `completeDate`) VALUES
 (1, 'Mingle Box', 'hello', '[\"flask\"]', '2021-12-23 12:56:05', '15000', '28000', 2, 1, '2022-03-10 19:05:41'),
-(2, 'Agri', 'Agri', '[\"flask\"]', '2022-03-03 14:56:17', '2000', '300000', 2, 1, '2022-03-15 19:05:48'),
-(3, 'Tesseract', 'Tesseract OCR', '[\"python\", \"flask\"]', '2022-03-23 15:11:44', '1500', '1500', 2, 1, '2022-03-23 20:43:48');
+(2, 'App', 'App', '[\"flask\"]', '2022-03-03 14:56:17', '2000', '300000', 2, 1, '2022-03-17 19:05:48'),
+(3, 'Tesseract', 'Tesseract OCR', '[\"python\", \"flask\"]', '2022-03-23 15:11:44', '1500', '1500', 2, 1, '2022-03-23 20:43:48'),
+(4, 'Project', 'Project', '[\"python\"]', '2022-03-24 12:43:30', '1000', '2000', 2, 1, '2022-03-24 18:26:07');
 
 -- --------------------------------------------------------
 
@@ -297,7 +310,8 @@ INSERT INTO `requests` (`id`, `name`, `description`, `technology`, `adddatetime`
 (10, 'flask devs', 'flask devs needed', '[\"flask\"]', '2022-03-15 15:39:43', 1),
 (11, 'flask dev', 'flask', '[\"flask\"]', '2022-03-15 15:45:16', 1),
 (12, 'python devs', 'python', '[\"python\"]', '2022-03-15 15:47:21', 1),
-(13, 'TTS engine devs', 'TTS engine python developers', '[\"python\"]', '2022-03-15 15:52:12', 1);
+(13, 'TTS engine devs', 'TTS engine python developers', '[\"python\"]', '2022-03-15 15:52:12', 1),
+(14, 'Project', 'Project', '[\"python\"]', '2022-03-24 13:20:39', 1);
 
 -- --------------------------------------------------------
 
@@ -318,6 +332,7 @@ CREATE TABLE `responses` (
 INSERT INTO `responses` (`id`, `coderId`, `requestId`) VALUES
 (1, 2, 2),
 (3, 2, 5),
+(4, 2, 14),
 (2, 8, 2);
 
 -- --------------------------------------------------------
@@ -458,7 +473,7 @@ ALTER TABLE `technology`
 -- AUTO_INCREMENT for table `bids`
 --
 ALTER TABLE `bids`
-  MODIFY `id` int(255) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=8;
+  MODIFY `id` int(255) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=10;
 
 --
 -- AUTO_INCREMENT for table `buyers`
@@ -470,7 +485,7 @@ ALTER TABLE `buyers`
 -- AUTO_INCREMENT for table `chat`
 --
 ALTER TABLE `chat`
-  MODIFY `id` int(255) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=155;
+  MODIFY `id` int(255) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=164;
 
 --
 -- AUTO_INCREMENT for table `coders`
@@ -488,13 +503,13 @@ ALTER TABLE `options`
 -- AUTO_INCREMENT for table `payments`
 --
 ALTER TABLE `payments`
-  MODIFY `id` int(255) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=7;
+  MODIFY `id` int(255) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=9;
 
 --
 -- AUTO_INCREMENT for table `projects`
 --
 ALTER TABLE `projects`
-  MODIFY `id` int(255) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=4;
+  MODIFY `id` int(255) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=5;
 
 --
 -- AUTO_INCREMENT for table `questions`
@@ -506,13 +521,13 @@ ALTER TABLE `questions`
 -- AUTO_INCREMENT for table `requests`
 --
 ALTER TABLE `requests`
-  MODIFY `id` int(255) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=14;
+  MODIFY `id` int(255) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=15;
 
 --
 -- AUTO_INCREMENT for table `responses`
 --
 ALTER TABLE `responses`
-  MODIFY `id` int(255) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=4;
+  MODIFY `id` int(255) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=6;
 
 --
 -- AUTO_INCREMENT for table `score`

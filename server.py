@@ -227,8 +227,10 @@ def addBuyerRequest():
             return "error"
 
         # insert
-        count=conn.execute("""Insert into requests(id,name,description,technology,buyerId) Values(NULL,%s,%s,%s,(Select id from buyers where sha2(mail,256)=%s))""",[request.form.get("name"),request.form.get("description"),json.dumps(tech),request.form.get("id")])
+        print(request.form)
+        count=conn.execute("""Insert into requests(id,name,cost,description,technology,buyerId) Values(NULL,%s,%s,%s,%s,(Select id from buyers where sha2(mail,256)=%s))""",[request.form.get("name"),request.form.get("cost"),request.form.get("description"),json.dumps(tech),request.form.get("id")])
         myconn.commit()
+        print(count)
         if(count==0):
             return "error"
         
@@ -254,7 +256,7 @@ def addBuyerRequest():
 @app.route('/listBuyersRequests', methods=['POST'])
 def listBuyersRequests():
     try:
-        conn.execute("""SELECT r.id,r.name,r.description,r.technology,b.username,sha2(b.mail,256) as buyerId FROM requests r inner join buyers b on r.buyerId=b.id where TIMESTAMPDIFF(MINUTE,r.adddatetime,now())/60<24;""")
+        conn.execute("""SELECT r.id,r.name,r.description,r.cost,r.technology,b.username,sha2(b.mail,256) as buyerId FROM requests r inner join buyers b on r.buyerId=b.id where coderId is null and finalCost is null;""")
         result=conn.fetchall()
         print(result)
         return json.dumps(result)
@@ -358,10 +360,10 @@ def editBuyerProfile():
 @app.route('/buyerRequestHistory', methods=['POST'])
 def buyerRequestHistory():
     try:
-        conn.execute("""Select t1.id,t1.name,t1.technology,COALESCE(t2.count,0) as responses from requests t1 left JOIN (Select count(*) as count,requestId from responses group by requestId) t2 on t1.id=t2.requestId where buyerId=(Select id from buyers where SHA2(mail,256)=%s);""",[request.form.get("id")])
+        conn.execute("""Select t1.id,Coalesce((Select 'On Bid' where t1.finalCost is null),'Completed') as status,t1.completeDate,t1.finalCost,t1.adddatetime,t1.name,t1.cost,t1.technology,COALESCE(t2.count,0) as responses from requests t1 left JOIN (Select count(*) as count,requestId from responses group by requestId) t2 on t1.id=t2.requestId where buyerId=(Select id from buyers where SHA2(mail,256)=%s);""",[request.form.get("id")])
         result=conn.fetchall()
         print(result)
-        return json.dumps(result)
+        return json.dumps(result,default=str)
     except Exception as e:
         print(e)
         return "error"
@@ -1125,4 +1127,4 @@ def adminAddNewTechnology():
         return "error"
 
 if __name__ == '__main__':
-    socketio.run(app, debug=True,host="192.168.18.2",port=3000)
+    socketio.run(app, debug=True,host="192.168.18.46",port=3000)

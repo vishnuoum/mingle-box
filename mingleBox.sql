@@ -3,7 +3,7 @@
 -- https://www.phpmyadmin.net/
 --
 -- Host: localhost
--- Generation Time: Mar 24, 2022 at 02:29 PM
+-- Generation Time: Mar 30, 2022 at 08:33 PM
 -- Server version: 10.4.21-MariaDB
 -- PHP Version: 8.0.10
 
@@ -69,7 +69,8 @@ CREATE TABLE `buyers` (
 INSERT INTO `buyers` (`id`, `username`, `company`, `mail`, `password`, `date`, `verified`, `pushId`) VALUES
 (1, 'hello3', 'hello', 'hello1@gmail.com', '1bdc9965d79dfa166dc6110cc8a7eb4082aaf00a592d2ca820277fca9240fe81', '2021-12-23', 'yes', NULL),
 (8, 'Vishnu', 'UEC', 'hallellujah@gmail.com', 'a665a45920422f9d417e4867efdc4fb8a04a1f3fff1fa07e998e86f7f7a27ae3', '2021-12-29', 'yes', NULL),
-(9, '123', '123', '1237@gmail.com', 'a665a45920422f9d417e4867efdc4fb8a04a1f3fff1fa07e998e86f7f7a27ae3', '2022-03-18', 'yes', NULL);
+(9, '123', '123', '1237@gmail.com', 'a665a45920422f9d417e4867efdc4fb8a04a1f3fff1fa07e998e86f7f7a27ae3', '2022-03-18', 'yes', NULL),
+(10, 'hello', 'Hellohat', 'hellohellohello@gmail.com', '1bdc9965d79dfa166dc6110cc8a7eb4082aaf00a592d2ca820277fca9240fe81', '2022-03-29', 'no', NULL);
 
 -- --------------------------------------------------------
 
@@ -110,7 +111,9 @@ INSERT INTO `chat` (`id`, `message`, `datetime`, `sender`, `senderType`, `receiv
 (160, 'hi', '2022-03-24 13:15:18', 1, 'buyer', 2, 'coder'),
 (161, 'Hi', '2022-03-24 13:17:43', 1, 'buyer', 9, 'coder'),
 (162, 'Interested in Project', '2022-03-24 13:21:02', 2, 'coder', 1, 'buyer'),
-(163, 'Interested in Project', '2022-03-24 13:23:45', 2, 'coder', 1, 'buyer');
+(163, 'Interested in Project', '2022-03-24 13:23:45', 2, 'coder', 1, 'buyer'),
+(164, 'hello', '2022-03-24 15:29:31', 2, 'coder', 1, 'buyer'),
+(165, 'hello', '2022-03-24 15:36:10', 2, 'coder', 1, 'buyer');
 
 -- --------------------------------------------------------
 
@@ -136,7 +139,8 @@ INSERT INTO `coders` (`id`, `username`, `mail`, `password`, `technology`, `date`
 (2, 'hello', 'hello@gmail.com', '99f2bdf9942653ab32d9dfa0b43c72c3fbbb9679450fd965c590c224897b848a', '[\"django\", \"flask\", \"python\", \"express.js\"]', '2021-12-23', NULL),
 (8, 'VM', 'hellohai@gmail.com', 'a665a45920422f9d417e4867efdc4fb8a04a1f3fff1fa07e998e86f7f7a27ae3', '[\"python\"]', '2021-12-29', NULL),
 (9, '123', '123@gmail.com', 'a665a45920422f9d417e4867efdc4fb8a04a1f3fff1fa07e998e86f7f7a27ae3', '[\"python\", \"django\", \"flask\", \"express.js\"]', '2022-03-18', NULL),
-(14, 'Hello', 'hellohello@gmail.com', 'a665a45920422f9d417e4867efdc4fb8a04a1f3fff1fa07e998e86f7f7a27ae3', '[]', '2022-03-22', NULL);
+(14, 'Hello', 'hellohello@gmail.com', 'a665a45920422f9d417e4867efdc4fb8a04a1f3fff1fa07e998e86f7f7a27ae3', '[]', '2022-03-22', NULL),
+(15, 'haihai', 'helloi@gmail.com', '1bdc9965d79dfa166dc6110cc8a7eb4082aaf00a592d2ca820277fca9240fe81', '[]', '2022-03-30', NULL);
 
 -- --------------------------------------------------------
 
@@ -246,7 +250,8 @@ INSERT INTO `projects` (`id`, `name`, `description`, `technology`, `timestamp`, 
 (1, 'Mingle Box', 'hello', '[\"flask\"]', '2021-12-23 12:56:05', '15000', '28000', 2, 1, '2022-03-10 19:05:41'),
 (2, 'App', 'App', '[\"flask\"]', '2022-03-03 14:56:17', '2000', '300000', 2, 1, '2022-03-17 19:05:48'),
 (3, 'Tesseract', 'Tesseract OCR', '[\"python\", \"flask\"]', '2022-03-23 15:11:44', '1500', '1500', 2, 1, '2022-03-23 20:43:48'),
-(4, 'Project', 'Project', '[\"python\"]', '2022-03-24 12:43:30', '1000', '2000', 2, 1, '2022-03-24 18:26:07');
+(4, 'Project', 'Project', '[\"python\"]', '2022-03-24 12:43:30', '1000', '2000', 2, 1, '2022-03-24 18:26:07'),
+(5, 'hello', 'hello', '[\"python\"]', '2022-03-30 18:13:26', '1200', NULL, 2, NULL, NULL);
 
 -- --------------------------------------------------------
 
@@ -288,30 +293,35 @@ INSERT INTO `questions` (`id`, `question`, `answer`, `technologyId`) VALUES
 CREATE TABLE `requests` (
   `id` int(255) NOT NULL,
   `name` varchar(50) NOT NULL,
+  `cost` varchar(255) NOT NULL,
   `description` text NOT NULL,
   `technology` longtext CHARACTER SET utf8mb4 COLLATE utf8mb4_bin NOT NULL CHECK (json_valid(`technology`)),
   `adddatetime` timestamp NOT NULL DEFAULT current_timestamp() ON UPDATE current_timestamp(),
-  `buyerId` int(255) NOT NULL
+  `buyerId` int(255) NOT NULL,
+  `coderId` int(11) DEFAULT NULL,
+  `finalCost` varchar(255) DEFAULT NULL,
+  `completeDate` datetime DEFAULT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
 
 --
 -- Dumping data for table `requests`
 --
 
-INSERT INTO `requests` (`id`, `name`, `description`, `technology`, `adddatetime`, `buyerId`) VALUES
-(2, 'Mingle Box', 'hello', '[\"flask\"]', '2021-12-23 13:12:58', 1),
-(3, 'TTS engine', 'hello', '[\"python\"]', '2021-12-30 13:54:37', 1),
-(4, 'Needed Python Devs', 'Required python developers for project', '[\"python\"]', '2022-03-06 08:46:42', 1),
-(5, 'Needed Python Devs 2', 'Mingle Box', '[\"python\", \"flask\"]', '2022-03-06 08:49:14', 1),
-(6, 'Flask devs', 'Wanted Flask developers', '[\"flask\", \"python\"]', '2022-03-15 15:14:26', 1),
-(7, 'Python', 'Python devs requried', '[\"python\"]', '2022-03-15 15:20:06', 1),
-(8, 'Python devs needed', 'needed python devs for work', '[\"flask\"]', '2022-03-15 15:30:39', 1),
-(9, 'python', 'python devs needed', '[\"python\"]', '2022-03-15 15:32:14', 1),
-(10, 'flask devs', 'flask devs needed', '[\"flask\"]', '2022-03-15 15:39:43', 1),
-(11, 'flask dev', 'flask', '[\"flask\"]', '2022-03-15 15:45:16', 1),
-(12, 'python devs', 'python', '[\"python\"]', '2022-03-15 15:47:21', 1),
-(13, 'TTS engine devs', 'TTS engine python developers', '[\"python\"]', '2022-03-15 15:52:12', 1),
-(14, 'Project', 'Project', '[\"python\"]', '2022-03-24 13:20:39', 1);
+INSERT INTO `requests` (`id`, `name`, `cost`, `description`, `technology`, `adddatetime`, `buyerId`, `coderId`, `finalCost`, `completeDate`) VALUES
+(2, 'Mingle Box', '10000', 'hello', '[\"flask\"]', '2022-03-30 17:20:36', 1, NULL, NULL, NULL),
+(3, 'TTS engine', '10000', 'hello', '[\"python\"]', '2022-03-30 17:20:36', 1, NULL, NULL, NULL),
+(4, 'Needed Python Devs', '10000', 'Required python developers for project', '[\"python\"]', '2022-03-30 17:20:36', 1, NULL, NULL, NULL),
+(5, 'Needed Python Devs 2', '10000', 'Mingle Box', '[\"python\", \"flask\"]', '2022-03-30 17:20:36', 1, NULL, NULL, NULL),
+(6, 'Flask devs', '10000', 'Wanted Flask developers', '[\"flask\", \"python\"]', '2022-03-30 17:20:36', 1, NULL, NULL, NULL),
+(7, 'Python', '10000', 'Python devs requried', '[\"python\"]', '2022-03-30 17:20:36', 1, NULL, NULL, NULL),
+(8, 'Python devs needed', '10000', 'needed python devs for work', '[\"flask\"]', '2022-03-30 17:20:36', 1, NULL, NULL, NULL),
+(9, 'python', '10000', 'python devs needed', '[\"python\"]', '2022-03-30 17:20:36', 1, NULL, NULL, NULL),
+(10, 'flask devs', '10000', 'flask devs needed', '[\"flask\"]', '2022-03-30 17:20:36', 1, NULL, NULL, NULL),
+(11, 'flask dev', '10000', 'flask', '[\"flask\"]', '2022-03-30 17:20:36', 1, NULL, NULL, NULL),
+(12, 'python devs', '10000', 'python', '[\"python\"]', '2022-03-30 17:20:36', 1, NULL, NULL, NULL),
+(13, 'TTS engine devs', '10000', 'TTS engine python developers', '[\"python\"]', '2022-03-30 17:20:36', 1, NULL, NULL, NULL),
+(14, 'Project', '10000', 'Project', '[\"python\"]', '2022-03-30 17:20:36', 1, NULL, NULL, NULL),
+(15, 'Hello', '1000', 'hello', '[\"python\"]', '2022-03-30 17:39:35', 1, NULL, NULL, NULL);
 
 -- --------------------------------------------------------
 
@@ -322,18 +332,10 @@ INSERT INTO `requests` (`id`, `name`, `description`, `technology`, `adddatetime`
 CREATE TABLE `responses` (
   `id` int(255) NOT NULL,
   `coderId` int(255) NOT NULL,
-  `requestId` int(255) NOT NULL
+  `requestId` int(255) NOT NULL,
+  `datetime` datetime NOT NULL DEFAULT current_timestamp(),
+  `amount` varchar(255) NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
-
---
--- Dumping data for table `responses`
---
-
-INSERT INTO `responses` (`id`, `coderId`, `requestId`) VALUES
-(1, 2, 2),
-(3, 2, 5),
-(4, 2, 14),
-(2, 8, 2);
 
 -- --------------------------------------------------------
 
@@ -479,19 +481,19 @@ ALTER TABLE `bids`
 -- AUTO_INCREMENT for table `buyers`
 --
 ALTER TABLE `buyers`
-  MODIFY `id` int(255) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=10;
+  MODIFY `id` int(255) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=11;
 
 --
 -- AUTO_INCREMENT for table `chat`
 --
 ALTER TABLE `chat`
-  MODIFY `id` int(255) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=164;
+  MODIFY `id` int(255) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=166;
 
 --
 -- AUTO_INCREMENT for table `coders`
 --
 ALTER TABLE `coders`
-  MODIFY `id` int(255) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=15;
+  MODIFY `id` int(255) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=16;
 
 --
 -- AUTO_INCREMENT for table `options`
@@ -509,7 +511,7 @@ ALTER TABLE `payments`
 -- AUTO_INCREMENT for table `projects`
 --
 ALTER TABLE `projects`
-  MODIFY `id` int(255) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=5;
+  MODIFY `id` int(255) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=6;
 
 --
 -- AUTO_INCREMENT for table `questions`
@@ -521,7 +523,7 @@ ALTER TABLE `questions`
 -- AUTO_INCREMENT for table `requests`
 --
 ALTER TABLE `requests`
-  MODIFY `id` int(255) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=15;
+  MODIFY `id` int(255) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=16;
 
 --
 -- AUTO_INCREMENT for table `responses`

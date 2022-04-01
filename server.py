@@ -256,7 +256,7 @@ def addBuyerRequest():
 @app.route('/listBuyersRequests', methods=['POST'])
 def listBuyersRequests():
     try:
-        conn.execute("""SELECT r.id,r.name,r.description,r.cost,r.technology,b.username,sha2(b.mail,256) as buyerId FROM requests r inner join buyers b on r.buyerId=b.id where coderId is null and finalCost is null;""")
+        conn.execute("""SELECT sha2(r.id,256) as id,r.name,Coalesce((Select min(amount) from responses where requestId=r.id),0) as lowestBid,r.finalCost,r.description,r.cost,r.technology,b.username,sha2(b.mail,256) as buyerId FROM requests r inner join buyers b on r.buyerId=b.id where coderId is null and finalCost is null;""")
         result=conn.fetchall()
         print(result)
         return json.dumps(result)
@@ -360,7 +360,7 @@ def editBuyerProfile():
 @app.route('/buyerRequestHistory', methods=['POST'])
 def buyerRequestHistory():
     try:
-        conn.execute("""Select t1.id,Coalesce((Select 'On Bid' where t1.finalCost is null),'Completed') as status,t1.completeDate,t1.finalCost,t1.adddatetime,t1.name,t1.cost,t1.technology,COALESCE(t2.count,0) as responses from requests t1 left JOIN (Select count(*) as count,requestId from responses group by requestId) t2 on t1.id=t2.requestId where buyerId=(Select id from buyers where SHA2(mail,256)=%s);""",[request.form.get("id")])
+        conn.execute("""Select sha2(t1.id,256) as id,Coalesce((Select 'On Bid' where t1.finalCost is null),'Completed') as status,t1.completeDate,t1.finalCost,t1.adddatetime,t1.name,t1.cost,t1.technology,COALESCE(t2.count,0) as responses from requests t1 left JOIN (Select count(*) as count,requestId from responses group by requestId) t2 on t1.id=t2.requestId where buyerId=(Select id from buyers where SHA2(mail,256)=%s);""",[request.form.get("id")])
         result=conn.fetchall()
         print(result)
         return json.dumps(result,default=str)
@@ -585,6 +585,20 @@ def coderProjectBidders():
         print(e)
         return "error"
 
+# ! list of request bidders for buyers
+@app.route('/buyerRequestBidders', methods=['POST'])
+def buyerRequestBidders():
+    try:
+        print("bidder")
+        conn.execute("""select datetime,amount,(Select username from coders where id=coderId) as bidder,( Select sha2(mail,256) from coders where id=coderId) as bidderId from responses where sha2(requestId,256)=%s""",
+                [request.form.get("id")])
+        result=conn.fetchall()
+        print(result)
+        return json.dumps(result,default=str)
+    except Exception as e:
+        print(e)
+        return "error"
+
 
 # ! list of coders
 @app.route('/codersList', methods=['POST'])
@@ -626,11 +640,37 @@ def buyerBidHistory():
         print(e)
         return "error"
 
+# ! coder response history
+@app.route('/coderResponseHistory', methods=['POST'])
+def coderResponseHistory():
+    try:
+        conn.execute("""Select sha2(id,256) as id,sha2(requestId,256) as requestId,(Select name from requests where requests.id=requestId) as name,(Select completeDate from requests where requests.id=requestId) as completeDate,(Select username from buyers where id=(Select buyerId from requests where requests.id=requestId)) as buyer,(Select sha2(coderId,256) from requests where requests.id=requestId) as buyerId,amount,Date(datetime) as datetime,coalesce((Select 'Won' from requests where requests.coderId=coderId and requests.id=requestId),(Select 'Pending' from requests where coderId is NULL and requests.id=requestId),'Lost') as status from responses where coderId=(Select id from coders where sha2(mail,256)=%s);""",
+                [request.form.get("id")])
+        result=conn.fetchall()
+        print(result)
+        print(conn._last_executed)
+        return json.dumps(result,default=str)
+    except Exception as e:
+        print(e)
+        print(conn._last_executed)
+        return "error"
+
 # ! respond to buyer request
 @app.route('/coderRespond', methods=['POST'])
 def coderRespond():
+    print(request.form)
     try:
-        count=conn.execute("""Insert into responses(id,coderId,requestId) values(null,(Select id from coders where sha2(mail,256)=%s),%s)""",[request.form.get("coderId"),request.form.get("requestId")])
+        conn.execute("""Select technology,(select technology from requests where sha2(id,256)=%s) as techRequired from coders where sha2(mail,256)=%s""",[request.form.get("requestId"),request.form.get("coderId")])
+        result=conn.fetchone()
+        tech=json.loads(result["technology"])
+        techRequired = json.loads(result["techRequired"])
+
+        if(not set(techRequired).issubset(tech)):
+            print("hello")
+            return "error"
+
+        count=conn.execute("""Insert into responses(id,requestId,coderId,amount) Values(NULL,(select id from requests where sha2(id,256)=%s),(Select id from coders where sha2(mail,256)=%s),%s)
+            On duplicate key Update amount=%s, datetime=now()""",[request.form.get("requestId"),request.form.get("coderId"),request.form.get("amount"),request.form.get("amount")])
         myconn.commit()
         print(conn._last_executed)
         if(count==0):
@@ -703,6 +743,63 @@ def coderSelectBidder():
                     "message":"You won the bid for "+result["project"],
                     "senderType":"coder",
                     "receiverType":"buyer"}
+            if(chatMessage['receiver'] in users):
+                socketid=users[chatMessage['receiver']]
+            else:
+                socketid=''
+            print(chatMessage["receiver"])
+            count=conn.execute("""INSERT INTO chat(id,message,sender,senderType,receiver,receiverType) values(null,%s,if(strcmp(%s,'coder')=0,(Select id from coders where sha2(mail,256)=%s),(Select id from buyers where sha2(mail,256)=%s)),%s,if(strcmp(%s,'coder')=0,(Select id from coders where sha2(mail,256)=%s),(Select id from buyers where sha2(mail,256)=%s)),%s)""",[chatMessage["message"],chatMessage["senderType"],chatMessage["sender"],chatMessage["sender"],chatMessage["senderType"],chatMessage["receiverType"],chatMessage["receiver"],chatMessage["receiver"],chatMessage["receiverType"]])
+            myconn.commit()
+            print(conn._last_executed)
+            chatMessage["dateTime"]=str(today)
+            conn.execute("""Select if(strcmp(%s,'coder')=0,(Select username from coders where sha2(mail,256)=%s),(Select username from buyers where sha2(mail,256)=%s)) as chatWith""",
+                    [chatMessage["senderType"],chatMessage["sender"],chatMessage["sender"]])
+            result=conn.fetchone()
+            print(result)
+            chatMessage["chatWith"]=result["chatWith"]
+            socketio.emit('newMessage',chatMessage,room=socketid)
+
+        except Exception as e:
+            print(e)
+            pass
+    except Exception as e:
+        print(e)
+        return "error"
+
+    return "done"
+
+# ! buyer select bidder
+@app.route('/buyerSelectBidder', methods=['POST'])
+def buyerSelectBidder():
+    try:
+        count=conn.execute("""Update requests set finalCost=%s, coderId=(Select id from coders where sha2(mail,256)=%s), completeDate=now() where sha2(id,256)=%s and buyerId=(Select id from buyers where sha2(mail,256)=%s)""",[request.form.get("finalCost"),request.form.get("coderId"),request.form.get("requestId"),request.form.get("id")])
+        myconn.commit()
+        print(conn._last_executed)
+        if(count==0):
+            return "error"
+        try:
+            conn.execute("""Select mail,(Select name from requests where sha2(id,256)=%s) as request from coders where sha2(mail,256)=%s""",
+                    [request.form.get("requestId"),request.form.get("coderId")])
+            result=conn.fetchone()
+            header = {"Content-Type": "application/json; charset=utf-8","Authorization": "Basic MmVkNjBmYzctMWM1Mi00NDQwLTgzYWQtODdkOTA4YTk3ZDAw"}
+
+            payload = {"app_id": "94000518-7da5-44a5-a338-7efd79d09099",
+                    "include_external_user_ids": [result["mail"]],
+                    "channel_for_external_user_ids": "push",
+                    "headings":{"en":"Congratulations"},
+                    "contents": {"en": "You won a Bid!!"}}
+            
+            req = requests.post("https://onesignal.com/api/v1/notifications", headers=header, data=json.dumps(payload))
+            print(req.status_code, req.reason)
+
+            # send message to buyer
+            today = datetime.now()
+            print(today)
+            chatMessage={"receiver":request.form.get("coderId"),
+                    "sender":request.form.get("id"),
+                    "message":"You won the bid for "+result["request"],
+                    "senderType":"buyer",
+                    "receiverType":"coder"}
             if(chatMessage['receiver'] in users):
                 socketid=users[chatMessage['receiver']]
             else:

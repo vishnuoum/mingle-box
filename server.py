@@ -41,11 +41,11 @@ def sessions():
 @app.route("/coderRegister", methods=['POST'])
 def coderRegister():
     try:
-        count=conn.execute("""Insert into coders(id,username,mail,password) Values(NULL,%s,%s,sha2(%s,256))""",[request.form.get("username"),request.form.get("mail"),request.form.get("password")])
+        count=conn.execute("""Insert ignore into coders(id,username,mail,password) Values(NULL,%s,%s,sha2(%s,256))""",[request.form.get("username"),request.form.get("mail"),request.form.get("password")])
         myconn.commit()
         print(count)
         if(count==0):
-            return "error"
+            return "duplicate"
         result={}
         val=hashlib.sha256(request.form.get("mail").encode())
         result["id"]= val.hexdigest()
@@ -58,11 +58,11 @@ def coderRegister():
 @app.route("/buyerRegister", methods=['POST'])
 def buyerRegister():
     try:
-        count=conn.execute("""Insert into buyers(id,username,mail,password,company) Values(NULL,%s,%s,sha2(%s,256),%s)""",[request.form.get("username"),request.form.get("mail"),request.form.get("password"),request.form.get("company")])
+        count=conn.execute("""Insert ignore into buyers(id,username,mail,password,company) Values(NULL,%s,%s,sha2(%s,256),%s)""",[request.form.get("username"),request.form.get("mail"),request.form.get("password"),request.form.get("company")])
         myconn.commit()
         print(count)
         if(count==0):
-            return "error"
+            return "duplicate"
         result={}
         val=hashlib.sha256(request.form.get("mail").encode())
         result["id"]= val.hexdigest()
@@ -79,7 +79,7 @@ def coderValidate():
         result=conn.fetchall()
         print(result)
         if(len(result)==0):
-            return "error"
+            return "wrong"
         return json.dumps(result[0])
     except Exception as e:
         print(e)
@@ -93,7 +93,7 @@ def buyerValidate():
         result=conn.fetchall()
         print(result)
         if(len(result)==0):
-            return "error"
+            return "wrong"
         return json.dumps(result[0])
     except Exception as e:
             print(e)

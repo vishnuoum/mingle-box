@@ -3,7 +3,7 @@
 -- https://www.phpmyadmin.net/
 --
 -- Host: localhost
--- Generation Time: Apr 01, 2022 at 04:51 PM
+-- Generation Time: Apr 24, 2022 at 02:49 PM
 -- Server version: 10.4.21-MariaDB
 -- PHP Version: 8.0.10
 
@@ -40,10 +40,8 @@ CREATE TABLE `bids` (
 --
 
 INSERT INTO `bids` (`id`, `projectId`, `buyerId`, `datetime`, `amount`) VALUES
-(1, 1, 1, '2022-03-06 10:35:19', '28000'),
-(3, 2, 1, '2022-03-16 16:14:54', '300000'),
-(7, 3, 1, '2022-03-23 15:13:30', '1500'),
-(8, 4, 1, '2022-03-24 12:44:39', '2000');
+(1, 1, 1, '2022-04-24 12:15:04', '6000'),
+(2, 2, 1, '2022-04-24 12:43:33', '56000');
 
 -- --------------------------------------------------------
 
@@ -67,10 +65,7 @@ CREATE TABLE `buyers` (
 --
 
 INSERT INTO `buyers` (`id`, `username`, `company`, `mail`, `password`, `date`, `verified`, `pushId`) VALUES
-(1, 'hello3', 'hello', 'hello1@gmail.com', '1bdc9965d79dfa166dc6110cc8a7eb4082aaf00a592d2ca820277fca9240fe81', '2021-12-23', 'yes', NULL),
-(8, 'Vishnu', 'UEC', 'hallellujah@gmail.com', 'a665a45920422f9d417e4867efdc4fb8a04a1f3fff1fa07e998e86f7f7a27ae3', '2021-12-29', 'yes', NULL),
-(9, '123', '123', '1237@gmail.com', 'a665a45920422f9d417e4867efdc4fb8a04a1f3fff1fa07e998e86f7f7a27ae3', '2022-03-18', 'yes', NULL),
-(10, 'hello', 'Hellohat', 'hellohellohello@gmail.com', '1bdc9965d79dfa166dc6110cc8a7eb4082aaf00a592d2ca820277fca9240fe81', '2022-03-29', 'no', NULL);
+(1, 'Buyer', 'Buyer Company', 'buyer@gmail.com', '99f2bdf9942653ab32d9dfa0b43c72c3fbbb9679450fd965c590c224897b848a', '2022-04-24', 'yes', NULL);
 
 -- --------------------------------------------------------
 
@@ -93,30 +88,17 @@ CREATE TABLE `chat` (
 --
 
 INSERT INTO `chat` (`id`, `message`, `datetime`, `sender`, `senderType`, `receiver`, `receiverType`) VALUES
-(145, 'Hi', '2022-03-20 17:39:12', 1, 'buyer', 2, 'coder'),
-(146, 'hello', '2022-03-20 17:39:23', 1, 'buyer', 2, 'coder'),
-(147, 'hi', '2022-03-20 17:39:29', 2, 'coder', 1, 'buyer'),
-(148, 'Hi', '2022-03-20 17:40:04', 9, 'buyer', 2, 'coder'),
-(149, '😂', '2022-03-20 17:40:45', 9, 'buyer', 2, 'coder'),
-(150, '😆', '2022-03-20 17:40:49', 9, 'buyer', 2, 'coder'),
-(151, 'hey', '2022-03-20 17:41:02', 2, 'coder', 9, 'buyer'),
-(152, 'hi', '2022-03-22 15:18:29', 1, 'buyer', 2, 'coder'),
-(153, 'hey', '2022-03-22 15:18:35', 1, 'buyer', 2, 'coder'),
-(154, 'hello', '2022-03-22 15:18:39', 1, 'buyer', 2, 'coder'),
-(155, 'You won the bid for Project', '2022-03-24 12:54:18', 2, 'coder', 1, 'buyer'),
-(156, 'hello', '2022-03-24 12:54:57', 2, 'coder', 1, 'buyer'),
-(157, 'You won the bid for Project', '2022-03-24 12:56:08', 2, 'coder', 1, 'buyer'),
-(158, 'hello', '2022-03-24 13:12:46', 1, 'buyer', 2, 'coder'),
-(159, 'helk', '2022-03-24 13:13:38', 2, 'coder', 9, 'buyer'),
-(160, 'hi', '2022-03-24 13:15:18', 1, 'buyer', 2, 'coder'),
-(161, 'Hi', '2022-03-24 13:17:43', 1, 'buyer', 9, 'coder'),
-(162, 'Interested in Project', '2022-03-24 13:21:02', 2, 'coder', 1, 'buyer'),
-(163, 'Interested in Project', '2022-03-24 13:23:45', 2, 'coder', 1, 'buyer'),
-(164, 'hello', '2022-03-24 15:29:31', 2, 'coder', 1, 'buyer'),
-(165, 'hello', '2022-03-24 15:36:10', 2, 'coder', 1, 'buyer'),
-(166, 'You won the bid for Mingle Box', '2022-04-01 14:03:44', 1, 'buyer', 2, 'coder'),
-(167, 'You won the bid for TTS engine', '2022-04-01 14:27:16', 1, 'buyer', 14, 'coder'),
-(168, 'You won the bid for Needed Python Devs', '2022-04-01 14:45:53', 1, 'buyer', 2, 'coder');
+(1, 'You won the bid for Python streaming project', '2022-04-24 12:15:14', 1, 'coder', 1, 'buyer'),
+(2, 'You won the bid for Python Project', '2022-04-24 12:16:44', 1, 'buyer', 1, 'coder'),
+(3, 'hello', '2022-04-24 12:17:53', 1, 'coder', 1, 'buyer'),
+(4, 'hi there', '2022-04-24 12:17:59', 1, 'buyer', 1, 'coder'),
+(5, 'when do you want the porject to be delivered?', '2022-04-24 12:18:23', 1, 'coder', 1, 'buyer'),
+(6, 'is next week possible?', '2022-04-24 12:18:41', 1, 'buyer', 1, 'coder'),
+(7, 'yes', '2022-04-24 12:18:50', 1, 'coder', 1, 'buyer'),
+(8, 'ok then', '2022-04-24 12:19:00', 1, 'buyer', 1, 'coder'),
+(9, 'expecting the complete project next week.!!', '2022-04-24 12:19:28', 1, 'buyer', 1, 'coder'),
+(10, 'After the strict evaluation from our company side, we will issue the payment.', '2022-04-24 12:19:59', 1, 'buyer', 1, 'coder'),
+(11, 'sure', '2022-04-24 12:20:07', 1, 'coder', 1, 'buyer');
 
 -- --------------------------------------------------------
 
@@ -139,11 +121,7 @@ CREATE TABLE `coders` (
 --
 
 INSERT INTO `coders` (`id`, `username`, `mail`, `password`, `technology`, `date`, `pushId`) VALUES
-(2, 'hello', 'hello@gmail.com', '99f2bdf9942653ab32d9dfa0b43c72c3fbbb9679450fd965c590c224897b848a', '[\"django\", \"flask\", \"python\", \"express.js\"]', '2021-12-23', NULL),
-(8, 'VM', 'hellohai@gmail.com', 'a665a45920422f9d417e4867efdc4fb8a04a1f3fff1fa07e998e86f7f7a27ae3', '[\"python\"]', '2021-12-29', NULL),
-(9, '123', '123@gmail.com', 'a665a45920422f9d417e4867efdc4fb8a04a1f3fff1fa07e998e86f7f7a27ae3', '[\"python\", \"django\", \"flask\", \"express.js\"]', '2022-03-18', NULL),
-(14, 'Hello', 'hellohello@gmail.com', 'a665a45920422f9d417e4867efdc4fb8a04a1f3fff1fa07e998e86f7f7a27ae3', '[\"python\"]', '2022-03-22', NULL),
-(15, 'haihai', 'helloi@gmail.com', '1bdc9965d79dfa166dc6110cc8a7eb4082aaf00a592d2ca820277fca9240fe81', '[]', '2022-03-30', NULL);
+(1, 'Coder', 'coder@gmail.com', '99f2bdf9942653ab32d9dfa0b43c72c3fbbb9679450fd965c590c224897b848a', '[\"python\", \"ML\"]', '2022-04-24', NULL);
 
 -- --------------------------------------------------------
 
@@ -195,7 +173,27 @@ INSERT INTO `options` (`id`, `optionText`, `questionId`) VALUES
 (95, 'req', 32),
 (96, 'res', 32),
 (97, 'next', 32),
-(98, 'All of the above', 32);
+(98, 'All of the above', 32),
+(99, 'Computer learns itself', 33),
+(100, 'Hard coding', 33),
+(101, 'Manual coding', 33),
+(102, 'None of the above', 33),
+(103, 'A branch of machine learning', 34),
+(104, 'A branch of computer coding', 34),
+(105, 'A hard coding technique', 34),
+(106, 'None of the above', 34),
+(107, 'Yes', 35),
+(108, 'Sometimes', 35),
+(109, 'Never', 35),
+(110, 'None of the above', 35),
+(111, 'Supervised', 36),
+(112, 'Unsupervised', 36),
+(113, 'Semi-supervised', 36),
+(114, 'Unsupervised', 36),
+(115, 'Decision Tree', 37),
+(116, 'Random Forest', 37),
+(117, 'Logistic Regression', 37),
+(118, 'K-Means', 37);
 
 -- --------------------------------------------------------
 
@@ -217,14 +215,7 @@ CREATE TABLE `payments` (
 --
 
 INSERT INTO `payments` (`id`, `amount`, `senderId`, `receiverId`, `datetime`, `description`) VALUES
-(1, '2500', 1, 2, '2021-12-30 16:43:14', 'Mingle Box payment'),
-(2, '2500', 1, 2, '2022-03-06 07:11:04', 'Mingle Box 2'),
-(3, '25000', 1, 2, '2022-03-06 07:12:52', 'Mingle Box 3'),
-(4, '300000', 1, 2, '2022-03-23 13:33:30', 'Agri App payment'),
-(5, '100', 1, 2, '2022-03-23 14:01:24', 'test'),
-(6, '100', 1, 2, '2022-03-23 14:58:08', 'Test'),
-(7, '2000', 1, 2, '2022-03-24 13:04:17', 'Project fund'),
-(8, '100', 1, 2, '2022-03-24 13:06:40', 'test');
+(1, '6000', 1, 1, '2022-04-24 12:16:05', 'Python streaming project payment.');
 
 -- --------------------------------------------------------
 
@@ -250,11 +241,8 @@ CREATE TABLE `projects` (
 --
 
 INSERT INTO `projects` (`id`, `name`, `description`, `technology`, `timestamp`, `cost`, `finalCost`, `coderId`, `buyerId`, `completeDate`) VALUES
-(1, 'Mingle Box', 'hello', '[\"flask\"]', '2021-12-23 12:56:05', '15000', '28000', 2, 1, '2022-03-10 19:05:41'),
-(2, 'App', 'App', '[\"flask\"]', '2022-03-03 14:56:17', '2000', '300000', 2, 1, '2022-03-17 19:05:48'),
-(3, 'Tesseract', 'Tesseract OCR', '[\"python\", \"flask\"]', '2022-03-23 15:11:44', '1500', '1500', 2, 1, '2022-03-23 20:43:48'),
-(4, 'Project', 'Project', '[\"python\"]', '2022-03-24 12:43:30', '1000', '2000', 2, 1, '2022-03-24 18:26:07'),
-(5, 'hello', 'hello', '[\"python\"]', '2022-03-30 18:13:26', '1200', NULL, 2, NULL, NULL);
+(1, 'Python streaming project', 'Python project', '[\"python\"]', '2022-04-24 12:14:22', '5000', '6000', 1, 1, '2022-04-24 17:45:13'),
+(2, 'Machine Learning', 'Machine Learning Project for Coders', '[\"python\", \"ML\"]', '2022-04-24 12:43:06', '50000', NULL, 1, NULL, NULL);
 
 -- --------------------------------------------------------
 
@@ -285,7 +273,12 @@ INSERT INTO `questions` (`id`, `question`, `answer`, `technologyId`) VALUES
 (29, 'Express is used along?', '84', 17),
 (30, 'Features of express?', '90', 17),
 (31, 'Express is used in', '92', 17),
-(32, 'Arguments available in express route handler function', '98', 17);
+(32, 'Arguments available in express route handler function', '98', 17),
+(33, 'What is ML?', '99', 18),
+(34, 'What is deep learning?', '103', 18),
+(35, 'Does deep learning uses neurons?', '107', 18),
+(36, 'Identify one which is not a type of learning', '113', 18),
+(37, 'Which of the following algorithm uses unsupervised learning?', '118', 18);
 
 -- --------------------------------------------------------
 
@@ -311,21 +304,8 @@ CREATE TABLE `requests` (
 --
 
 INSERT INTO `requests` (`id`, `name`, `cost`, `description`, `technology`, `adddatetime`, `buyerId`, `coderId`, `finalCost`, `completeDate`) VALUES
-(2, 'Mingle Box', '10000', 'hello', '[\"flask\"]', '2022-04-01 14:03:41', 1, 2, '8950', '2022-04-01 19:33:41'),
-(3, 'TTS engine', '10000', 'hello', '[\"python\"]', '2022-04-01 14:27:12', 1, 14, '9997', '2022-04-01 19:57:12'),
-(4, 'Needed Python Devs', '10000', 'Required python developers for project', '[\"python\"]', '2022-04-01 14:45:36', 1, 2, '8949', '2022-04-01 20:15:36'),
-(5, 'Needed Python Devs 2', '10000', 'Mingle Box', '[\"python\", \"flask\"]', '2022-03-30 17:20:36', 1, NULL, NULL, NULL),
-(6, 'Flask devs', '10000', 'Wanted Flask developers', '[\"flask\", \"python\"]', '2022-03-30 17:20:36', 1, NULL, NULL, NULL),
-(7, 'Python', '10000', 'Python devs requried', '[\"python\"]', '2022-03-30 17:20:36', 1, NULL, NULL, NULL),
-(8, 'Python devs needed', '10000', 'needed python devs for work', '[\"flask\"]', '2022-03-30 17:20:36', 1, NULL, NULL, NULL),
-(9, 'python', '10000', 'python devs needed', '[\"python\"]', '2022-03-30 17:20:36', 1, NULL, NULL, NULL),
-(10, 'flask devs', '10000', 'flask devs needed', '[\"flask\"]', '2022-03-30 17:20:36', 1, NULL, NULL, NULL),
-(11, 'flask dev', '10000', 'flask', '[\"flask\"]', '2022-03-30 17:20:36', 1, NULL, NULL, NULL),
-(12, 'python devs', '10000', 'python', '[\"python\"]', '2022-03-30 17:20:36', 1, NULL, NULL, NULL),
-(13, 'TTS engine devs', '10000', 'TTS engine python developers', '[\"python\"]', '2022-03-30 17:20:36', 1, NULL, NULL, NULL),
-(14, 'Project', '10000', 'Project', '[\"python\"]', '2022-03-30 17:20:36', 1, NULL, NULL, NULL),
-(15, 'Hello', '1000', 'hello', '[\"python\"]', '2022-03-30 17:39:35', 1, NULL, NULL, NULL),
-(16, 'Project', '25000', 'hello', '[\"python\"]', '2022-04-01 14:39:15', 1, NULL, NULL, NULL);
+(1, 'Python Project', '10000', 'Python project', '[\"python\"]', '2022-04-24 12:16:43', 1, 1, '9999', '2022-04-24 17:46:43'),
+(2, 'Python backend', '60000', 'Python backend program', '[\"python\"]', '2022-04-24 12:21:31', 1, NULL, NULL, NULL);
 
 -- --------------------------------------------------------
 
@@ -346,11 +326,8 @@ CREATE TABLE `responses` (
 --
 
 INSERT INTO `responses` (`id`, `coderId`, `requestId`, `datetime`, `amount`) VALUES
-(6, 2, 2, '2022-04-01 18:03:28', '8950'),
-(9, 9, 3, '2022-04-01 19:52:30', '9998'),
-(11, 14, 3, '2022-04-01 19:54:35', '9997'),
-(12, 14, 4, '2022-04-01 19:55:05', '9000'),
-(13, 2, 4, '2022-04-01 20:15:09', '8949');
+(1, 1, 1, '2022-04-24 17:43:12', '9999'),
+(2, 1, 2, '2022-04-24 17:51:56', '59000');
 
 -- --------------------------------------------------------
 
@@ -370,16 +347,8 @@ CREATE TABLE `score` (
 --
 
 INSERT INTO `score` (`id`, `technologyId`, `score`, `coderId`) VALUES
-(2, 3, '100', 2),
-(3, 4, '100', 2),
-(5, 1, '100', 2),
-(13, 1, '100', 8),
-(14, 17, '100', 2),
-(18, 1, '80', 9),
-(19, 3, '100', 9),
-(20, 4, '100', 9),
-(21, 17, '100', 9),
-(22, 1, '100', 14);
+(1, 1, '100', 1),
+(2, 18, '100', 1);
 
 -- --------------------------------------------------------
 
@@ -400,7 +369,8 @@ INSERT INTO `technology` (`id`, `technology`) VALUES
 (1, 'python'),
 (3, 'django'),
 (4, 'flask'),
-(17, 'express.js');
+(17, 'express.js'),
+(18, 'ML');
 
 --
 -- Indexes for dumped tables
@@ -492,73 +462,73 @@ ALTER TABLE `technology`
 -- AUTO_INCREMENT for table `bids`
 --
 ALTER TABLE `bids`
-  MODIFY `id` int(255) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=10;
+  MODIFY `id` int(255) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=3;
 
 --
 -- AUTO_INCREMENT for table `buyers`
 --
 ALTER TABLE `buyers`
-  MODIFY `id` int(255) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=11;
+  MODIFY `id` int(255) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=2;
 
 --
 -- AUTO_INCREMENT for table `chat`
 --
 ALTER TABLE `chat`
-  MODIFY `id` int(255) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=169;
+  MODIFY `id` int(255) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=12;
 
 --
 -- AUTO_INCREMENT for table `coders`
 --
 ALTER TABLE `coders`
-  MODIFY `id` int(255) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=16;
+  MODIFY `id` int(255) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=2;
 
 --
 -- AUTO_INCREMENT for table `options`
 --
 ALTER TABLE `options`
-  MODIFY `id` int(255) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=99;
+  MODIFY `id` int(255) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=119;
 
 --
 -- AUTO_INCREMENT for table `payments`
 --
 ALTER TABLE `payments`
-  MODIFY `id` int(255) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=9;
+  MODIFY `id` int(255) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=2;
 
 --
 -- AUTO_INCREMENT for table `projects`
 --
 ALTER TABLE `projects`
-  MODIFY `id` int(255) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=6;
+  MODIFY `id` int(255) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=3;
 
 --
 -- AUTO_INCREMENT for table `questions`
 --
 ALTER TABLE `questions`
-  MODIFY `id` int(255) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=33;
+  MODIFY `id` int(255) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=38;
 
 --
 -- AUTO_INCREMENT for table `requests`
 --
 ALTER TABLE `requests`
-  MODIFY `id` int(255) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=17;
+  MODIFY `id` int(255) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=3;
 
 --
 -- AUTO_INCREMENT for table `responses`
 --
 ALTER TABLE `responses`
-  MODIFY `id` int(255) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=15;
+  MODIFY `id` int(255) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=3;
 
 --
 -- AUTO_INCREMENT for table `score`
 --
 ALTER TABLE `score`
-  MODIFY `id` int(255) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=23;
+  MODIFY `id` int(255) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=3;
 
 --
 -- AUTO_INCREMENT for table `technology`
 --
 ALTER TABLE `technology`
-  MODIFY `id` int(255) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=18;
+  MODIFY `id` int(255) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=19;
 COMMIT;
 
 /*!40101 SET CHARACTER_SET_CLIENT=@OLD_CHARACTER_SET_CLIENT */;

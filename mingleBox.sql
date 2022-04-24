@@ -3,7 +3,7 @@
 -- https://www.phpmyadmin.net/
 --
 -- Host: localhost
--- Generation Time: Apr 24, 2022 at 02:49 PM
+-- Generation Time: Apr 24, 2022 at 05:27 PM
 -- Server version: 10.4.21-MariaDB
 -- PHP Version: 8.0.10
 
@@ -65,7 +65,8 @@ CREATE TABLE `buyers` (
 --
 
 INSERT INTO `buyers` (`id`, `username`, `company`, `mail`, `password`, `date`, `verified`, `pushId`) VALUES
-(1, 'Buyer', 'Buyer Company', 'buyer@gmail.com', '99f2bdf9942653ab32d9dfa0b43c72c3fbbb9679450fd965c590c224897b848a', '2022-04-24', 'yes', NULL);
+(1, 'Buyer', 'Buyer Company', 'buyer@gmail.com', '99f2bdf9942653ab32d9dfa0b43c72c3fbbb9679450fd965c590c224897b848a', '2022-04-24', 'yes', NULL),
+(2, 'Buyer1', 'Buyer1', 'buyer1@gmail.com', '99f2bdf9942653ab32d9dfa0b43c72c3fbbb9679450fd965c590c224897b848a', '2022-04-24', 'no', NULL);
 
 -- --------------------------------------------------------
 
@@ -121,7 +122,8 @@ CREATE TABLE `coders` (
 --
 
 INSERT INTO `coders` (`id`, `username`, `mail`, `password`, `technology`, `date`, `pushId`) VALUES
-(1, 'Coder', 'coder@gmail.com', '99f2bdf9942653ab32d9dfa0b43c72c3fbbb9679450fd965c590c224897b848a', '[\"python\", \"ML\"]', '2022-04-24', NULL);
+(1, 'Coder', 'coder@gmail.com', '99f2bdf9942653ab32d9dfa0b43c72c3fbbb9679450fd965c590c224897b848a', '[\"python\", \"ML\"]', '2022-04-24', NULL),
+(2, 'Coder1', 'coder1@gmail.com', '99f2bdf9942653ab32d9dfa0b43c72c3fbbb9679450fd965c590c224897b848a', '[]', '2022-04-24', NULL);
 
 -- --------------------------------------------------------
 
@@ -242,7 +244,8 @@ CREATE TABLE `projects` (
 
 INSERT INTO `projects` (`id`, `name`, `description`, `technology`, `timestamp`, `cost`, `finalCost`, `coderId`, `buyerId`, `completeDate`) VALUES
 (1, 'Python streaming project', 'Python project', '[\"python\"]', '2022-04-24 12:14:22', '5000', '6000', 1, 1, '2022-04-24 17:45:13'),
-(2, 'Machine Learning', 'Machine Learning Project for Coders', '[\"python\", \"ML\"]', '2022-04-24 12:43:06', '50000', NULL, 1, NULL, NULL);
+(2, 'Machine Learning', 'Machine Learning Project for Coders', '[\"python\", \"ML\"]', '2022-04-24 12:43:06', '50000', NULL, 1, NULL, NULL),
+(3, 'Streaming', 'Python Project', '[\"python\"]', '2022-04-24 15:21:38', '10000', NULL, 1, NULL, NULL);
 
 -- --------------------------------------------------------
 
@@ -305,7 +308,8 @@ CREATE TABLE `requests` (
 
 INSERT INTO `requests` (`id`, `name`, `cost`, `description`, `technology`, `adddatetime`, `buyerId`, `coderId`, `finalCost`, `completeDate`) VALUES
 (1, 'Python Project', '10000', 'Python project', '[\"python\"]', '2022-04-24 12:16:43', 1, 1, '9999', '2022-04-24 17:46:43'),
-(2, 'Python backend', '60000', 'Python backend program', '[\"python\"]', '2022-04-24 12:21:31', 1, NULL, NULL, NULL);
+(2, 'Python backend', '60000', 'Python backend program', '[\"python\"]', '2022-04-24 12:21:31', 1, NULL, NULL, NULL),
+(3, 'Project', '10000', 'Description', '[\"python\"]', '2022-04-24 15:20:47', 1, NULL, NULL, NULL);
 
 -- --------------------------------------------------------
 
@@ -462,13 +466,13 @@ ALTER TABLE `technology`
 -- AUTO_INCREMENT for table `bids`
 --
 ALTER TABLE `bids`
-  MODIFY `id` int(255) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=3;
+  MODIFY `id` int(255) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=4;
 
 --
 -- AUTO_INCREMENT for table `buyers`
 --
 ALTER TABLE `buyers`
-  MODIFY `id` int(255) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=2;
+  MODIFY `id` int(255) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=3;
 
 --
 -- AUTO_INCREMENT for table `chat`
@@ -480,7 +484,7 @@ ALTER TABLE `chat`
 -- AUTO_INCREMENT for table `coders`
 --
 ALTER TABLE `coders`
-  MODIFY `id` int(255) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=2;
+  MODIFY `id` int(255) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=3;
 
 --
 -- AUTO_INCREMENT for table `options`
@@ -498,7 +502,7 @@ ALTER TABLE `payments`
 -- AUTO_INCREMENT for table `projects`
 --
 ALTER TABLE `projects`
-  MODIFY `id` int(255) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=3;
+  MODIFY `id` int(255) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=4;
 
 --
 -- AUTO_INCREMENT for table `questions`
@@ -510,7 +514,7 @@ ALTER TABLE `questions`
 -- AUTO_INCREMENT for table `requests`
 --
 ALTER TABLE `requests`
-  MODIFY `id` int(255) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=3;
+  MODIFY `id` int(255) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=4;
 
 --
 -- AUTO_INCREMENT for table `responses`

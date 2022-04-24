@@ -305,7 +305,7 @@ def buyerDashboard():
 @app.route('/buyerProfile', methods=['POST'])
 def buyerProfile():
     try:
-        conn.execute("""Select SHA2(id,256) as id,username,mail,company from buyers where SHA2(mail,256)=%s""",[request.form.get("id")])
+        conn.execute("""Select SHA2(id,256) as id,username,mail,company,verified from buyers where SHA2(mail,256)=%s""",[request.form.get("id")])
         result=conn.fetchall()
         if(len(result)==0):
             return "error"
@@ -547,7 +547,7 @@ def coderResult():
 def buyerBid():
     try:
         count=conn.execute("""
-            Insert into bids(id,projectId,buyerId,datetime,amount) Values(NULL,(select id from projects where sha2(id,256)=%s),(Select id from buyers where sha2(mail,256)=%s),now(),%s)
+            Insert into bids(id,projectId,buyerId,datetime,amount) Values(NULL,(select id from projects where sha2(id,256)=%s),(Select id from buyers where sha2(mail,256)=%s and verified='yes'),now(),%s)
             On duplicate key Update amount=%s, datetime=now()""",
                 [request.form.get("projectId"),request.form.get("id"),request.form.get("amount"),request.form.get("amount")])
         myconn.commit()
@@ -885,6 +885,18 @@ def coderPasswordReset():
         if(count==0):
             return "error"
         return "done"
+    except Exception as e:
+        print(e)
+        return "error"
+
+# ! technology List
+@app.route('/getTechnologyList', methods=['POST'])
+def getTechnologyList():
+    try:
+        conn.execute("""Select technology from technology""")
+        result=conn.fetchall()
+        print(result)
+        return json.dumps(result,default=str)
     except Exception as e:
         print(e)
         return "error"

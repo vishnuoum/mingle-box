@@ -1236,4 +1236,4 @@ def adminAddNewTechnology():
         return "error"
 
 if __name__ == '__main__':
-    socketio.run(app, debug=True,host="192.168.18.46",port=3000)
+    socketio.run(app, debug=True,host="192.168.18.2",port=3000)
